@@ -1,4 +1,24 @@
-<!-- <?php include "../../includes/database.php" ?> -->
+<?php
+$servername = "localhost";
+$username = "root";
+$password = "";
+$dbname = "gardeningstore";
+
+$conn = new mysqli($servername, $username, $password);
+
+if ($conn->connect_error) {
+    die("Connection failed: " . $conn->connect_error);
+}
+$db_create_query = "CREATE DATABASE IF NOT EXISTS $dbname";
+if (!$conn->query($db_create_query)) {
+    die("Database creation failed: " . $conn->error);
+}
+$conn->select_db($dbname);
+
+// Fetch products from the database
+$query = "SELECT name, category, subcategory, price, description, image FROM products";
+$result = $conn->query($query);
+?>
 
 <div class="container-fluid">
     <div class="row">
@@ -6,135 +26,53 @@
             <div class="alazea-portfolio-filter">
                 <div class="portfolio-filter">
                     <button class="btn active classynav" data-filter="*">All</button>
-                    <button class="btn" data-filter=".gardening">Gardening</button>
-                    <button class="btn" data-filter=".plants">Plants</button>
-                    <button class="btn" data-filter=".seeds">Seeds</button>
-                    <button class="btn" data-filter=".bulbs">Bulbs</button>
-                    <button class="btn" data-filter=".planters">Planters</button>
+                    <button class="btn" data-filter=".plants">Plant</button>
+                    <button class="btn" data-filter=".gardening-tool">Gardening Tool</button>
+                    <button class="btn" data-filter=".seed">Seeds</button>
+                    <button class="btn" data-filter=".bulb">Bulbs</button>
                     <button class="btn" data-filter=".soil-fertilizer">Soil & Fertilizer</button>
-                    <button class="btn" data-filter=".pebbles">Pebbles</button>
-                    <button class="btn" data-filter=".accessories">Accessories</button>
+                    <button class="btn" data-filter=".pebble">Pebbles</button>
+                    <button class="btn" data-filter=".accessory">Accessories</button>
                 </div>
             </div>
         </div>
     </div>
 
     <div class="row alazea-portfolio">
+        <?php
+        if ($result->num_rows > 0) {
+            while ($row = $result->fetch_assoc()) {
+                $name = htmlspecialchars($row['name']);
+                $category = strtolower(str_replace(' ', '-', htmlspecialchars($row['category'])));
+                $subcategory = strtolower(str_replace(' ', '-', htmlspecialchars($row['subcategory'])));
+                $description = htmlspecialchars($row['description']);
+                $price = number_format($row['price'], 2);
+                $imageData = base64_encode($row['image']);
+                $imageSrc = "data:image/jpeg;base64," . $imageData;
+                ?>
 
-        <!-- Single Portfolio Area -->
-        <div class="col-12 col-sm-6 col-lg-3 single_portfolio_item plants home-design wow fadeInUp"
-            data-wow-delay="100ms">
-            <!-- Portfolio Thumbnail -->
-            <div class="portfolio-thumbnail bg-img" style="background-image: url(img/bg-img/16.jpg);"></div>
-            <!-- Portfolio Hover Text -->
-            <div class="portfolio-hover-overlay">
-                <a href="img/bg-img/16.jpg" class="portfolio-img d-flex align-items-center justify-content-center"
-                    title="Portfolio 1">
-                    <div class="port-hover-text">
-                        <h3>Minimal Flower Store</h3>
-                        <h5>Office Plants</h5>
+                <!-- Dynamically Generated Portfolio Item -->
+                <div class="col-12 col-sm-6 col-lg-3 single_portfolio_item <?php echo $category; ?> wow fadeInUp">
+                    <div class="portfolio-thumbnail bg-img" style="background-image: url('<?php echo $imageSrc; ?>'); background-position: center;
+                        background-size: contain;"></div>
+                    <div class="portfolio-hover-overlay">
+                        <a href="<?php echo $imageSrc; ?>"
+                            class="portfolio-img d-flex align-items-center justify-content-center" title="<?php echo $name; ?>">
+                            <div class="port-hover-text">
+                                <h3><?php echo $name; ?></h3>
+                                <h5><?php echo $description; ?></h5>
+                                <h6>Price: ₹<?php echo $price; ?></h6>
+                            </div>
+                        </a>
                     </div>
-                </a>
-            </div>
-        </div>
+                </div>
 
-        <!-- Single Portfolio Area -->
-        <div class="col-12 col-sm-6 col-lg-3 single_portfolio_item garden wow fadeInUp" data-wow-delay="200ms">
-            <!-- Portfolio Thumbnail -->
-            <div class="portfolio-thumbnail bg-img" style="background-image: url(img/bg-img/17.jpg);"></div>
-            <!-- Portfolio Hover Text -->
-            <div class="portfolio-hover-overlay">
-                <a href="img/bg-img/17.jpg" class="portfolio-img d-flex align-items-center justify-content-center"
-                    title="Portfolio 2">
-                    <div class="port-hover-text">
-                        <h3>Minimal Flower Store</h3>
-                        <h5>Office Plants</h5>
-                    </div>
-                </a>
-            </div>
-        </div>
-
-        <!-- Single Portfolio Area -->
-        <div class="col-12 col-sm-6 col-lg-3 single_portfolio_item garden design wow fadeInUp" data-wow-delay="300ms">
-            <!-- Portfolio Thumbnail -->
-            <div class="portfolio-thumbnail bg-img" style="background-image: url(img/bg-img/18.jpg);"></div>
-            <!-- Portfolio Hover Text -->
-            <div class="portfolio-hover-overlay">
-                <a href="img/bg-img/18.jpg" class="portfolio-img d-flex align-items-center justify-content-center"
-                    title="Portfolio 3">
-                    <div class="port-hover-text">
-                        <h3>Minimal Flower Store</h3>
-                        <h5>Office Plants</h5>
-                    </div>
-                </a>
-            </div>
-        </div>
-
-        <!-- Single Portfolio Area -->
-        <div class="col-12 col-sm-6 col-lg-3 single_portfolio_item garden office-design wow fadeInUp"
-            data-wow-delay="400ms">
-            <!-- Portfolio Thumbnail -->
-            <div class="portfolio-thumbnail bg-img" style="background-image: url(img/bg-img/19.jpg);"></div>
-            <!-- Portfolio Hover Text -->
-            <div class="portfolio-hover-overlay">
-                <a href="img/bg-img/19.jpg" class="portfolio-img d-flex align-items-center justify-content-center"
-                    title="Portfolio 4">
-                    <div class="port-hover-text">
-                        <h3>Minimal Flower Store</h3>
-                        <h5>Office Plants</h5>
-                    </div>
-                </a>
-            </div>
-        </div>
-
-        <!-- Single Portfolio Area -->
-        <div class="col-12 col-sm-6 col-lg-3 single_portfolio_item design office-design wow fadeInUp"
-            data-wow-delay="100ms">
-            <!-- Portfolio Thumbnail -->
-            <div class="portfolio-thumbnail bg-img" style="background-image: url(img/bg-img/20.jpg);"></div>
-            <!-- Portfolio Hover Text -->
-            <div class="portfolio-hover-overlay">
-                <a href="img/bg-img/20.jpg" class="portfolio-img d-flex align-items-center justify-content-center"
-                    title="Portfolio 5">
-                    <div class="port-hover-text">
-                        <h3>Minimal Flower Store</h3>
-                        <h5>Office Plants</h5>
-                    </div>
-                </a>
-            </div>
-        </div>
-
-        <!-- Single Portfolio Area -->
-        <div class="col-12 col-sm-6 col-lg-3 single_portfolio_item garden wow fadeInUp" data-wow-delay="200ms">
-            <!-- Portfolio Thumbnail -->
-            <div class="portfolio-thumbnail bg-img" style="background-image: url(img/bg-img/21.jpg);"></div>
-            <!-- Portfolio Hover Text -->
-            <div class="portfolio-hover-overlay">
-                <a href="img/bg-img/21.jpg" class="portfolio-img d-flex align-items-center justify-content-center"
-                    title="Portfolio 6">
-                    <div class="port-hover-text">
-                        <h3>Minimal Flower Store</h3>
-                        <h5>Office Plants</h5>
-                    </div>
-                </a>
-            </div>
-        </div>
-
-        <!-- Single Portfolio Area -->
-        <div class="col-12 col-lg-6 single_portfolio_item home-design wow fadeInUp" data-wow-delay="300ms">
-            <!-- Portfolio Thumbnail -->
-            <div class="portfolio-thumbnail bg-img" style="background-image: url(img/bg-img/22.jpg);"></div>
-            <!-- Portfolio Hover Text -->
-            <div class="portfolio-hover-overlay">
-                <a href="img/bg-img/22.jpg" class="portfolio-img d-flex align-items-center justify-content-center"
-                    title="Portfolio 7">
-                    <div class="port-hover-text">
-                        <h3>Minimal Flower Store</h3>
-                        <h5>Office Plants</h5>
-                    </div>
-                </a>
-            </div>
-        </div>
-
+                <?php
+            }
+        } else {
+            echo "<p class='text-center w-100'>No products found.</p>";
+        }
+        $conn->close();
+        ?>
     </div>
 </div>
