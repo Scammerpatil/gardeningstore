@@ -12,13 +12,13 @@
     </div>
     <!-- Navbar -->
     <?php include "./components/general/navbar.php" ?>
+    
     <!-- Form -->
     <section class="hero-area">
         <div class="hero-post-slides owl-carousel">
 
             <!-- Single Hero Post -->
-            <div class="single-hero-post bg-overlay">
-                <div class="slide-img bg-img" style="background-image: url(img/bg-img/1.jpg);"></div>
+            <div class="single-hero-post bg-overlay" style="background-color: skyblue;">
                 <div class="container h-75">
                     <div class="row h-75 align-items-center">
                         <div class="col-12">
@@ -66,9 +66,9 @@
                     </div>
                 </div>
             </div>
+
         </div>
     </section>
-
 
     <!-- Scripts -->
     <?php include "./components/general/scripts.php" ?>

@@ -3,199 +3,194 @@
 <?php
 include './components/general/header.php';
 ?>
+<body style="background-color: #DDF2D1;">
+    <?php include './components/general/navbar.php'; ?>
+    <div class="container-fluid mt-3">
+        <div class="row">
+            <!-- Category Sidebar -->
+            <div class="col-md-3">
+                <div class="list-group category-sidebar">
+                    <h4 class="text-center category-title">Categories</h4>
+                    <ul class="list-group">
+                        <!-- Plant Category -->
+                        <li class="list-group-item category-item" onclick="toggleSubcategories('plant')">
+                            Plant
+                            <ul class="list-group subcategory" id="plant">
+                                <li class="list-group-item">Indoor Plants</li>
+                                <li class="list-group-item">Outdoor Plants</li>
+                                <li class="list-group-item">Flowers</li>
+                                <li class="list-group-item">Succulents</li>
+                                <li class="list-group-item">Bonsai</li>
+                                <li class="list-group-item">Medicinal Plants</li>
+                                <li class="list-group-item">Air Purifying Plants</li>
+                            </ul>
+                        </li>
+                        <!-- Gardening Tool -->
+                        <li class="list-group-item category-item" onclick="toggleSubcategories('gardening-tool')">
+                            Gardening Tool
+                            <ul class="list-group subcategory" id="gardening-tool">
+                                <li class="list-group-item">Watering Can & Hoses</li>
+                                <li class="list-group-item">Pest Control</li>
+                                <li class="list-group-item">Garden Furniture</li>
+                                <li class="list-group-item">Landscaping</li>
+                                <li class="list-group-item">Garden Decor</li>
+                                <li class="list-group-item">DIY Kits</li>
+                            </ul>
+                        </li>
+                        <!-- Seeds -->
+                        <li class="list-group-item category-item" onclick="toggleSubcategories('seeds')">
+                            Seeds
+                            <ul class="list-group subcategory" id="seeds">
+                                <li class="list-group-item">Vegetable Seeds</li>
+                                <li class="list-group-item">Herb Seeds</li>
+                                <li class="list-group-item">Flower Seeds</li>
+                                <li class="list-group-item">Organic Seeds</li>
+                                <li class="list-group-item">Exotic Seeds</li>
+                                <li class="list-group-item">Fruit Seeds</li>
+                                <li class="list-group-item">Grass Seeds</li>
+                            </ul>
+                        </li>
+                        <!-- Bulb -->
+                        <li class="list-group-item category-item" onclick="toggleSubcategories('bulb')">
+                            Bulb
+                            <ul class="list-group subcategory" id="bulb">
+                                <li class="list-group-item">Flower Bulbs</li>
+                                <li class="list-group-item">Seasonal Bulbs</li>
+                                <li class="list-group-item">Perennial Bulbs</li>
+                                <li class="list-group-item">Exotic Bulbs</li>
+                                <li class="list-group-item">Indoor Bulbs</li>
+                                <li class="list-group-item">Outdoor Bulbs</li>
+                                <li class="list-group-item">Decorative Bulbs</li>
+                            </ul>
+                        </li>
+                        <!-- Soil & Fertilizer -->
+                        <li class="list-group-item category-item" onclick="toggleSubcategories('soil-fertilizer')">
+                            Soil & Fertilizer
+                            <ul class="list-group subcategory" id="soil-fertilizer">
+                                <li class="list-group-item">Organic Fertilizer</li>
+                                <li class="list-group-item">Potting Soil</li>
+                                <li class="list-group-item">Coco Peat</li>
+                                <li class="list-group-item">Vermicompost</li>
+                                <li class="list-group-item">Nutrient Mixes</li>
+                                <li class="list-group-item">Soil Amendments</li>
+                            </ul>
+                        </li>
+                        <!-- Pebbles -->
+                        <li class="list-group-item category-item" onclick="toggleSubcategories('pebbles')">
+                            Pebbles
+                            <ul class="list-group subcategory" id="pebbles">
+                                <li class="list-group-item">Decorative Pebbles</li>
+                                <li class="list-group-item">Natural Stones</li>
+                                <li class="list-group-item">River Rocks</li>
+                                <li class="list-group-item">Colored Pebbles</li>
+                                <li class="list-group-item">Aquarium Pebbles</li>
+                                <li class="list-group-item">Garden Path Pebbles</li>
+                                <li class="list-group-item">Gravel</li>
+                            </ul>
+                        </li>
+                        <!-- Accessories -->
+                        <li class="list-group-item category-item" onclick="toggleSubcategories('accessories')">
+                            Accessories
+                            <ul class="list-group subcategory" id="accessories">
+                                <li class="list-group-item">Plant Stands</li>
+                                <li class="list-group-item">Garden Lighting</li>
+                                <li class="list-group-item">Labels & Markers</li>
+                                <li class="list-group-item">Sprayers & Misters</li>
+                                <li class="list-group-item">Hanging Hooks</li>
+                            </ul>
+                        </li>
+                    </ul>
+                </div>
+            </div>
 
-<body>
-    <!-- <div class="preloader d-flex align-items-center justify-content-center">
-        <div class="preloader-circle"></div>
-        <div class="preloader-img">
-            <img src="img/core-img/leaf.png" alt="">
-        </div>
-    </div> -->
-    <?php
-    include './components/general/navbar.php';
-    ?>
-    <section class="hero-area">
-        <div class="hero-post-slides owl-carousel">
+            <!-- Main Content Area -->
+            <div class="col-md-9">
+                <section class="hero-area">
+                    <div class="hero-post-slides owl-carousel"></div>
+                </section>
 
-            <!-- Single Hero Post -->
-            <?php
-            $slides = [
-                ["img/bg-img/1.jpg", "Plants exist in the weather and light rays that surround them"],
-                ["img/bg-img/2.jpg", "Plants exist in the weather and light rays that surround them"]
-            ];
-            ?>
-            <?php foreach ($slides as $slide): ?>
-                <div class="single-hero-post bg-overlay">
-                    <div class="slide-img bg-img" style="background-image: url(<?php echo $slide[0]; ?>);"></div>
-                    <div class="container h-100">
-                        <div class="row h-100 align-items-center">
+                <section class="alazea-portfolio-area section-padding-100-0">
+                    <div class="container">
+                        <div class="row">
                             <div class="col-12">
-                                <div class="hero-slides-content text-center">
-                                    <h2><?php echo $slide[1]; ?></h2>
-                                    <div class="welcome-btn-group">
-                                        <a href="login.php" class="btn alazea-btn mr-30">GET STARTED</a>
-                                        <a href="contact.php" class="btn alazea-btn active">CONTACT US</a>
-                                    </div>
+                                <div class="section-heading text-center">
+                                    <h2>GARDENING STORE</h2>
+                                    <p>Explore our store</p>
                                 </div>
                             </div>
                         </div>
                     </div>
-                </div>
-            <?php endforeach; ?>
-        </div>
-    </section>
-    <!-- ##### Hero Area End ##### -->
-
-    <!-- ##### Service Area Start ##### -->
-    <section class="our-services-area bg-gray section-padding-100-0">
-        <div class="container">
-            <div class="row">
-                <div class="col-12">
-                    <!-- Section Heading -->
-                    <div class="section-heading text-center">
-                        <h2>OUR SERVICES</h2>
-                        <p>We provide the perfect service for you.</p>
-                    </div>
-                </div>
-            </div>
-
-            <div class="row justify-content-between">
-                <div class="col-12 col-lg-5">
-                    <div class="alazea-service-area mb-100">
-                        <?php
-                        $services = [
-                            ["img/core-img/s1.png", "Become a Seller", "Sell your own plants and gardening accessories on our platform. Connect with buyers easily!", "100ms"],
-                            ["img/core-img/s2.png", "Hire a Gardener", "Need professional help? Hire expert gardeners for maintenance, landscaping, and more!", "300ms"],
-                            ["img/core-img/s3.png", "Best-Selling Plants", "Explore our top-selling plants, chosen by customers for their beauty and benefits.", "500ms"]
-                        ];
-                        ?>
-
-                        <?php foreach ($services as $service): ?>
-                            <div class="single-service-area d-flex align-items-center wow fadeInUp"
-                                data-wow-delay="<?php echo $service[3]; ?>">
-                                <!-- Icon -->
-                                <div class="service-icon mr-30">
-                                    <img src="<?php echo $service[0]; ?>" alt="">
-                                </div>
-                                <!-- Content -->
-                                <div class="service-content">
-                                    <h5><?php echo $service[1]; ?></h5>
-                                    <p><?php echo $service[2]; ?></p>
-                                </div>
-                            </div>
-                        <?php endforeach; ?>
-
-                    </div>
-                </div>
-
-                <div class="col-12 col-lg-6">
-                    <div class="alazea-video-area mb-100">
-                        <img src="img/bg-img/23.jpg" alt="">
-                        </a>
-                    </div>
-                </div>
+                    <?php include "./components/general/portfolio.php"; ?>
+                </section>
             </div>
         </div>
-    </section>
-    <!-- ##### Service Area End ##### -->
+    </div>
 
-    <!-- ##### Portfolio Area Start ##### -->
-    <section class="alazea-portfolio-area section-padding-100-0">
-        <div class="container">
-            <div class="row">
-                <div class="col-12">
-                    <!-- Section Heading -->
-                    <div class="section-heading text-center">
-                        <h2>OUR STORE</h2>
-                        <p>Explore our store</p>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <?php include "./components/general/portfolio.php" ?>
-    </section>
-    <!-- ##### Portfolio Area End ##### -->
+    <script>
+        function toggleSubcategories(id) {
+            let subcategory = document.getElementById(id);
+            subcategory.style.display = subcategory.style.display === "none" ? "block" : "none";
+        }
 
-    <!-- ##### Testimonial Area Start ##### -->
-    <section class="testimonial-area section-padding-100">
-        <div class="container">
-            <div class="row">
-                <div class="col-12">
-                    <div class="testimonials-slides owl-carousel">
-                        <?php
-                        $owner = [
-                            [
-                                "img/bg-img/13.jpg",
-                                "STORE OWNER",
-                                "Some kind words from clients about Alazea",
-                                "“Alazea is a pleasure to work with. Their ideas are creative, they came up with imaginative solutions to some tricky issues, their landscaping and planting contacts are equally excellent we have a beautiful but also manageable garden as a result. Thank you!”",
-                                "Ms. Krutika Deepak Patil",
-                                "Founder of GreenWorld"
-                            ],
-                            [
-                                "img/bg-img/14.jpg",
-                                "TESTIMONIAL",
-                                "Some kind words from clients about Alazea",
-                                "“Alazea is a pleasure to work with. Their ideas are creative, they came up with imaginative solutions to some tricky issues, their landscaping and planting contacts are equally excellent we have a beautiful but also manageable garden as a result. Thank you!”",
-                                "Mr. Nazrul Islam",
-                                "CEO of NAVATECH"
-                            ],
-                            [
-                                "img/bg-img/15.jpg",
-                                "TESTIMONIAL",
-                                "Some kind words from clients about Alazea",
-                                "“Alazea is a pleasure to work with. Their ideas are creative, they came up with imaginative solutions to some tricky issues, their landscaping and planting contacts are equally excellent we have a beautiful but also manageable garden as a result. Thank you!”",
-                                "Mr. Jonas Nick",
-                                "CEO of NAVATECH"
-                            ]
-                        ]
-                            ?>
-                        <?php foreach ($owner as $testimonial): ?>
-                            <div class="single-testimonial-slide">
-                                <div class="row align-items-center">
-                                    <div class="col-12 col-md-6">
-                                        <div class="testimonial-thumb">
-                                            <img src=<?php echo $testimonial[0] ?> alt="">
-                                        </div>
-                                    </div>
-                                    <div class="col-12 col-md-6">
-                                        <div class="testimonial-content">
-                                            <!-- Section Heading -->
-                                            <div class="section-heading">
-                                                <h2><?php echo $testimonial[1] ?></h2>
-                                                <p><?php echo $testimonial[2] ?></p>
-                                            </div>
-                                            <p><?php echo $testimonial[3] ?></p>
-                                            <div class="testimonial-author-info">
-                                                <h6><?php echo $testimonial[4] ?></h6>
-                                                <p><?php echo $testimonial[5] ?></p>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        <?php endforeach; ?>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-    <!-- ##### Testimonial Area End ##### -->
+        document.addEventListener("DOMContentLoaded", function() {
+            let subcategories = document.querySelectorAll(".subcategory");
+            subcategories.forEach(sub => sub.style.display = "none");
+        });
+    </script>
 
-    <!-- ##### Product Area Start ##### -->
-    <?php include "./components/general/lastest_arrival.php" ?>
-    <!-- ##### Product Area End ##### -->
+    <style>
+        /* Make category sidebar fixed and occupy the full left corner */
+        .category-sidebar {
+            background-color: black;
+            color: white;
+            padding: 15px;
+            border-radius: 5px;
+            position: fixed;
+            top: 0;
+            left: 0;
+            height: 100vh;
+            width: 20%;
+            overflow-y: auto;
+        }
 
-    <!-- ##### Contact Area Start ##### -->
-    <?php include "./components/general/contact.php" ?>
-    <!-- ##### Contact Area End ##### -->
+        .category-title {
+            margin-bottom: 10px;
+            font-weight: bold;
+        }
 
-    <!-- ##### Footer Area Start ##### -->
-    <?php include "./components/general/footer.php" ?>
-    <!-- ##### Footer Area End ##### -->
+        .category-item {
+            background-color: black;
+            color: white;
+            border: none;
+            font-weight: bold;
+            cursor: pointer;
+        }
 
-    <!-- ##### All Javascript Files ##### -->
-    <?php include "./components/general/scripts.php" ?>
+        .category-item:hover {
+            background-color: #343a40;
+        }
+
+        .subcategory {
+            list-style-type: none;
+            padding-left: 15px;
+            display: none;
+        }
+
+        .subcategory .list-group-item {
+            background-color: black;
+            color: white;
+            border-left: 3px solid #CDEBC5;
+            margin-bottom: 2px;
+        }
+
+        .subcategory .list-group-item:hover {
+            background-color: #343a40;
+        }
+
+        /* Adjust main content to avoid overlapping with fixed sidebar */
+        .col-md-9 {
+            margin-left: 22%;
+        }
+    </style>
 </body>
-
 </html>

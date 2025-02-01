@@ -1,6 +1,6 @@
 <header class="header-area">
   <!-- ***** Navbar Area ***** -->
-  <div class="alazea-main-menu">
+  <div class="alazea-main-menu fixed-top">
     <div class="classy-nav-container breakpoint-off">
       <div class="container">
         <!-- Menu -->
@@ -52,3 +52,44 @@
     </div>
   </div>
 </header>
+
+<style>
+  /* Fixed Navbar */
+  .alazea-main-menu {
+      background-color: black !important;
+      width: 100%;
+      top: 0;
+      left: 0;
+      z-index: 1000;
+      position: fixed;
+  }
+
+  .nav-brand {
+      font-weight: bold;
+  }
+
+  .classynav ul li a {
+      color: white !important;
+  }
+
+  .classynav ul li a:hover {
+      color: #28a745 !important; /* Green color on hover */
+  }
+
+  .dropdown-menu {
+      background-color: black;
+  }
+
+  .dropdown-menu li a {
+      color: white !important;
+  }
+
+  .dropdown-menu li a:hover {
+      background-color: #343a40;
+  }
+
+  /* Adjust body to prevent overlap with fixed navbar */
+  body {
+      padding-top: 60px; /* Adjust according to navbar height */
+  }
+</style>
