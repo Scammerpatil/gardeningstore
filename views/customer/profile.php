@@ -1,7 +1,7 @@
 <?php
 $page_title = "User Profile";
 include '../../server/database.php';
-session_start();
+// session_start();
 $customer_id = $_SESSION['customer_id'] ?? null;
 
 if (!$customer_id) {
