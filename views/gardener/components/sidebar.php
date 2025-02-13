@@ -2,7 +2,7 @@
 $current_page = basename($_SERVER['PHP_SELF']);
 ?>
 
-<div class="drawer-side h-[calc(100vh-10rem)] overflow-y-auto">
+<div class="drawer-side h-[calc(100vh-6.3rem)] overflow-y-auto">
     <label for="my-drawer-2" aria-label="close sidebar" class="drawer-overlay"></label>
     <ul class="menu bg-base-200 text-base-content h-full w-80 p-4">
 
@@ -18,15 +18,6 @@ $current_page = basename($_SERVER['PHP_SELF']);
         </li>
         <li class="text-lg <?= ($current_page == 'completed_requests.php') ? 'bg-primary text-white' : ''; ?>">
             <a href="completed_requests.php"><i class="fa-solid fa-check-circle"></i> Completed Jobs</a>
-        </li>
-
-        <!-- Earnings & Payments -->
-        <li class="menu-title">Earnings</li>
-        <li class="text-lg <?= ($current_page == 'earnings.php') ? 'bg-primary text-white' : ''; ?>">
-            <a href="earnings.php"><i class="fa-solid fa-wallet"></i> My Earnings</a>
-        </li>
-        <li class="text-lg <?= ($current_page == 'payment_history.php') ? 'bg-primary text-white' : ''; ?>">
-            <a href="payment_history.php"><i class="fa-solid fa-money-bill-wave"></i> Payment History</a>
         </li>
 
         <!-- Profile & Settings -->

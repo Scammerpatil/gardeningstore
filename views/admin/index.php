@@ -18,7 +18,7 @@ $query_revenue = "SELECT SUM(total_amount) AS total_revenue FROM orders WHERE st
 $result_revenue = $conn->query($query_revenue);
 $total_revenue = $result_revenue->fetch_assoc()['total_revenue'] ?? 0;
 
-$query_hire_requests = "SELECT COUNT(*) AS pending_requests FROM hiring WHERE status = 'Pending'";
+$query_hire_requests = "SELECT COUNT(*) AS pending_requests FROM hire WHERE status = 'Pending'";
 $result_hire_requests = $conn->query($query_hire_requests);
 $pending_hire_requests = $result_hire_requests->fetch_assoc()['pending_requests'];
 
@@ -38,8 +38,8 @@ ob_start();
     <div class="card w-full bg-base-100 shadow-xl p-5">
         <h2 class="text-xl font-bold">Total Users</h2>
         <p class="text-3xl font-extrabold text-primary"><?= $total_users; ?></p>
-        <p class="text-sm text-gray-500">
-            Customers: <?= $users_data['customers']; ?>, Gardeners: <?= $users_data['gardeners']; ?>, Sellers:
+        <p class="text-sm text-base-content/80">
+            Customers: <?= $users_data['customers']; ?>,<br> Gardeners: <?= $users_data['gardeners']; ?>, <br>Sellers:
             <?= $users_data['sellers']; ?>
         </p>
     </div>
@@ -68,20 +68,21 @@ ob_start();
     <h2 class="text-2xl font-bold">Recent Orders</h2>
     <table class="table w-full mt-3 bg-base-100 shadow-md">
         <thead>
-            <tr class="bg-base-300 text-lg">
-                <th>Order ID</th>
-                <th>Customer</th>
-                <th>Total Amount</th>
-                <th>Status</th>
+            <tr class="bg-base-200 text-base text-center font-semibold">
+                <th class="text-base border border-base-content">Order ID</th>
+                <th class="text-base border border-base-content">Customer</th>
+                <th class="text-base border border-base-content">Total Amount</th>
+                <th class="text-base border border-base-content">Status</th>
             </tr>
         </thead>
         <tbody>
             <?php while ($order = $result_latest_orders->fetch_assoc()): ?>
-                <tr>
-                    <td>#<?= $order['id']; ?></td>
-                    <td><?= htmlspecialchars($order['customer_name']); ?></td>
-                    <td>₹<?= number_format($order['total_price'], 2); ?></td>
-                    <td class="<?= $order['status'] === 'Completed' ? 'text-green-500' : 'text-yellow-500'; ?>">
+                <tr class="text-center">
+                    <td class="text-base border border-base-content">#<?= $order['order_id']; ?></td>
+                    <td class="text-base border border-base-content"><?= htmlspecialchars($order['customer_name']); ?></td>
+                    <td class="text-base border border-base-content">₹<?= number_format($order['total_amount'], 2); ?></td>
+                    <td
+                        class="text-base border border-base-content <?= $order['status'] === 'Completed' ? 'text-green-500' : 'text-yellow-500'; ?>">
                         <?= $order['status']; ?>
                     </td>
                 </tr>

@@ -46,8 +46,14 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
         // Verify the password
         if (password_verify($password, $user['password_hash'])) {
-            // Set session variables for the logged-in user
-            $_SESSION['user_id'] = $user['id'];
+            if ($user_type === 'customer') {
+                $user_id = 'customer_id';
+            } elseif ($user_type === 'gardener') {
+                $user_id = 'gardener_id';
+            } elseif ($user_type === 'seller') {
+                $user_id = 'seller_id';
+            }
+            $_SESSION['user_id'] = $user[$user_id];
             $_SESSION['name'] = $user['name'];
             $_SESSION['user_type'] = $user_type;
 

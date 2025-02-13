@@ -51,7 +51,7 @@ $result = $conn->query($query);
         <div class="flex flex-wrap justify-center gap-2 my-4" id="subcategory-filters"></div>
 
         <!-- Product Grid -->
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 p-5" id="product-grid">
+        <div class="grid grid-cols-1 md:grid-cols-1 lg:grid-cols-3 gap-6 p-5" id="product-grid">
             <?php while ($row = $result->fetch_assoc()): ?>
                 <?php
                 $categoryClass = strtolower(str_replace([' ', '&'], ['-', 'and'], $row['category']));
@@ -61,7 +61,7 @@ $result = $conn->query($query);
 
                 <!-- Product Card -->
                 <div
-                    class="card w-80 bg-base-100 shadow-xl single_product_item <?= $categoryClass . ' ' . $subcategoryClass; ?>">
+                    class="card max-w-80 bg-base-100 shadow-xl single_product_item <?= $categoryClass . ' ' . $subcategoryClass; ?>">
                     <figure>
                         <img src="<?= $imageSrc; ?>" alt="<?= htmlspecialchars($row['name']); ?>"
                             class="h-48 w-full object-contain bg-blend-overlay" />
@@ -72,7 +72,8 @@ $result = $conn->query($query);
                         <h3 class="text-xl font-semibold text-primary">₹<?= number_format($row['price'], 2); ?></h3>
                         <div class="card-actions justify-center">
                             <button class="btn btn-secondary add-to-cart" data-id="<?= $row['product_id']; ?>"
-                                data-name="<?= htmlspecialchars($row['name']); ?>" data-price="<?= $row['price']; ?>">
+                                data-name="<?= htmlspecialchars($row['name']); ?>" data-price="<?= $row['price']; ?>"
+                                data-image="<?= $imageSrc; ?>">
                                 <i class="fa-solid fa-cart-shopping"></i> Add to Cart
                             </button>
                             <a href="cart.php" class="btn btn-primary">
@@ -160,6 +161,7 @@ $result = $conn->query($query);
         function saveCart() {
             localStorage.setItem("cart", JSON.stringify(cart));
             updateCartCount();
+            alert("Cart updated!");
         }
 
         document.querySelectorAll(".add-to-cart").forEach(button => {
@@ -183,6 +185,7 @@ $result = $conn->query($query);
                 }
 
                 saveCart();
+                console.log(cart);
                 alert("Added to cart!");
             });
         });

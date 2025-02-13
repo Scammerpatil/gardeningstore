@@ -1,5 +1,5 @@
 <?php
-$admin_name = $_SESSION['name'] ?? 'Admin';
+$admin_name = $_SESSION['name'] ?? 'Gardener';
 $admin_initials = strtoupper(substr($admin_name, 0, 1));
 if (strpos($admin_name, ' ') !== false) {
     $name_parts = explode(" ", $admin_name);
@@ -91,10 +91,10 @@ $admin_avatar = "../../img/bg-img/team2.png";
                 <p class="text-center font-bold mt-2"><?= htmlspecialchars($admin_name); ?></p>
                 <hr class="border border-base-content w-full my-2" />
                 <div class="w-full">
-                    <li class="text-base uppercase text-center"><a href="/gardeningstore/views/admin/">Dashboard</a>
+                    <li class="text-base uppercase text-center"><a href="/gardeningstore/views/gardener/">Dashboard</a>
                     </li>
                     <li class="text-base uppercase text-center"><a
-                            href="/gardeningstore/views/admin/profile.php">Profile</a></li>
+                            href="/gardeningstore/views/gardener/profile.php">Profile</a></li>
                     <li class="text-base uppercase text-center"><a
                             href="/gardeningstore/server/auth/logout.php">Logout</a>
                     </li>

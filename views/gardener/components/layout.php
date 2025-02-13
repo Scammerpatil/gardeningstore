@@ -7,7 +7,7 @@
         <input id="my-drawer-3" type="checkbox" class="drawer-toggle" />
         <div class="drawer-content flex flex-col">
             <!-- Navbar -->
-            <?php include '../../components/admin/Navbar.php'; ?>
+            <?php include '../../components/gardener/Navbar.php'; ?>
 
             <!-- Header Image -->
             <div class="hero h-80 relative bg-overlay z-10 overflow-hidden"

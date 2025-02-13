@@ -3,7 +3,7 @@ $current_page = basename($_SERVER['PHP_SELF']);
 $user_type = $_SESSION['user_type'] ?? 'customer';
 ?>
 
-<div class="drawer-side h-[calc(100vh-10rem)] overflow-y-auto">
+<div class="drawer-side h-[calc(100vh-5.2rem)] overflow-y-auto">
     <label for="my-drawer-2" aria-label="close sidebar" class="drawer-overlay"></label>
     <ul class="menu bg-base-200 text-base-content h-full w-80 p-4">
         <!-- Customer Sidebar -->
