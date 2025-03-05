@@ -66,8 +66,8 @@
                         class="appearance-none block w-full bg-base-100 text-base-content rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-base-200 border border-base-content"
                         name="user_type" id="grid-state">
                         <option>Choose User Type</option>
-                        <option value="customer">Admin</option>
-                        <option value="gardener">User</option>
+                        <option value="customer">Customer</option>
+                        <option value="gardener">Gardener</option>
                     </select>
                     <div
                         class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-base-content">
