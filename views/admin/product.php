@@ -75,7 +75,7 @@ $result = $conn->query($query);
                 <div class="w-full px-3 mb-6 md:mb-0">
                     <label class="block uppercase tracking-wide text-base-content text-base font-bold mb-2"
                         for="subcategory">
-                        Sub Categor
+                        Sub Category
                     </label>
                     <select
                         class="appearance-none block w-full bg-base-100 text-base-content rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-base-200 border border-base-content"

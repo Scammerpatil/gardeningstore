@@ -8,8 +8,6 @@ if (!isset($_SESSION['user_id'])) {
 
 $seller_id = $_SESSION['user_id'] ?? null;
 
-// 'Plant','Seed','Bulb','Soil & Fertilizer','Gardening Tool','Gift','Pebble','Accessory'
-
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $name = $_POST['name'];
     $category = $_POST['category'];
@@ -24,33 +22,15 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         exit;
     }
 
-    $check_admin = $conn->prepare("SELECT seller_id FROM sellers WHERE email = ?");
-    $admin_email = "admin@gardeningstore.com";
-    $check_admin->bind_param("s", $admin_email);
-    $check_admin->execute();
-    $check_admin->store_result();
-
-    if ($check_admin->num_rows == 0) {
-        // Admin does not exist, so create one
-        $add_admin = $conn->prepare("INSERT INTO sellers (name, contact_no, email, password_hash) VALUES (?, ?, ?, ?)");
-        $admin_name = "Admin";
-        $admin_contact_no = "9848707903";
-        $admin_password = password_hash("admin", PASSWORD_DEFAULT);
-        $add_admin->bind_param("ssss", $admin_name, $admin_contact_no, $admin_email, $admin_password);
-        $add_admin->execute();
-        $add_admin->close();
-    }
-    $check_admin->close();
-
     $imageData = file_get_contents($image['tmp_name']);
 
     if ($imageData === false) {
         echo "Failed to read image file.";
         exit;
     }
-    $stmt = $conn->prepare("INSERT INTO products (name, category, subcategory, price, quantity, description, image, seller_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?)");
+    $stmt = $conn->prepare("INSERT INTO products (name, category, subcategory, price, quantity, description, image) VALUES (?, ?, ?, ?, ?, ?, ?)");
 
-    $stmt->bind_param("sssdisbi", $name, $category, $subcategory, $price, $quantity, $description, $null, $seller_id);
+    $stmt->bind_param("sssdisb", $name, $category, $subcategory, $price, $quantity, $description, $null);
 
     $stmt->send_long_data(6, $imageData);
 

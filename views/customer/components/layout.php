@@ -28,7 +28,7 @@
                         </ul>
                     </div>
                     <!-- Dynamic Page Content -->
-                    <div class="mt-4 overflow-y-scroll h-[calc(100vh-10rem)]"><?= $page_content; ?></div>
+                    <div class="mt-4 overflow-y-scroll min-h-[calc(100vh-10rem)]"><?= $page_content; ?></div>
                 </div>
 
                 <!-- Sidebar -->

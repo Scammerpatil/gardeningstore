@@ -94,7 +94,7 @@ $admin_avatar = "../../img/bg-img/team2.png";
                     <li class="text-base uppercase text-center"><a href="/gardeningstore/views/gardener/">Dashboard</a>
                     </li>
                     <li class="text-base uppercase text-center"><a
-                            href="/gardeningstore/views/gardener/profile.php">Profile</a></li>
+                            href="/gardeningstore/views/gardener/update_profile.php">Profile</a></li>
                     <li class="text-base uppercase text-center"><a
                             href="/gardeningstore/server/auth/logout.php">Logout</a>
                     </li>

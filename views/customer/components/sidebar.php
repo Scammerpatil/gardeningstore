@@ -23,6 +23,9 @@ $user_type = $_SESSION['user_type'] ?? 'customer';
             <li class="text-lg <?= ($current_page == 'sellplant.php') ? 'bg-primary text-white' : ''; ?>">
                 <a href="sellplant.php"><i class="fa-solid fa-seedling"></i> Sell Plant</a>
             </li>
+            <li class="text-lg <?= ($current_page == 'sellplantstatus.php') ? 'bg-primary text-white' : ''; ?>">
+                <a href="sellplantstatus.php"><i class="fa-solid fa-seedling"></i> Sell Plant Status</a>
+            </li>
         <?php endif; ?>
 
         <li class="menu-title">Account</li>

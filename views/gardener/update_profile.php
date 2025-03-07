@@ -53,7 +53,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 <section class="container mx-auto py-10">
     <h1 class="text-4xl font-bold text-center">Update Profile</h1>
 
-    <div class="max-w-lg mx-auto mt-6 p-6 bg-base-100 shadow-md rounded-lg">
+    <div class="max-w-lg mx-auto mt-6 p-6 bg-base-100 border border-base-content rounded-lg">
         <form method="POST">
             <div class="form-group mb-4">
                 <label class="block text-lg font-semibold">Name</label>

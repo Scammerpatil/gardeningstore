@@ -4,11 +4,10 @@ $page_title = "Dashboard";
 
 $query_users = "SELECT 
     (SELECT COUNT(*) FROM customers) AS customers, 
-    (SELECT COUNT(*) FROM gardeners) AS gardeners, 
-    (SELECT COUNT(*) FROM sellers) AS sellers";
+    (SELECT COUNT(*) FROM gardeners) AS gardeners";
 $result_users = $conn->query($query_users);
 $users_data = $result_users->fetch_assoc();
-$total_users = $users_data['customers'] + $users_data['gardeners'] + $users_data['sellers'];
+$total_users = $users_data['customers'] + $users_data['gardeners'];
 
 $query_orders = "SELECT COUNT(*) AS total_orders FROM orders";
 $result_orders = $conn->query($query_orders);
@@ -39,8 +38,7 @@ ob_start();
         <h2 class="text-xl font-bold">Total Users</h2>
         <p class="text-3xl font-extrabold text-primary"><?= $total_users; ?></p>
         <p class="text-sm text-base-content/80">
-            Customers: <?= $users_data['customers']; ?>,<br> Gardeners: <?= $users_data['gardeners']; ?>, <br>Sellers:
-            <?= $users_data['sellers']; ?>
+            Customers: <?= $users_data['customers']; ?>,<br> Gardeners: <?= $users_data['gardeners']; ?>
         </p>
     </div>
 

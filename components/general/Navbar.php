@@ -1,6 +1,6 @@
 <header class="absolute inset-x-0 top-0 z-50">
     <nav class="flex items-center justify-between p-6 lg:px-8" aria-label="Global">
-        <div class="flex items-center gap-2 lg:flex-1">
+        <a class="flex items-center gap-2 lg:flex-1" href="/gardeningstore/">
             <img class="h-8 w-auto" src="img/core-img/leaf.png" alt="">
             <div class="flex flex-col items-start gap-1">
                 <div class="flex items-baseline gap-[2px]">
@@ -16,7 +16,7 @@
                     Your one stop solution for all your gardening needs
                 </span>
             </div>
-        </div>
+        </a>
         <div class="hidden lg:flex lg:gap-x-12">
             <a href="about.php" class="text-lg font-semibold text-white hover:text-primary">ABOUT</a>
             <a href="#" class="text-lg font-semibold text-white hover:text-primary">PORTFOLIO</a>
@@ -25,9 +25,9 @@
         </div>
         <div class="hidden gap-2 lg:flex lg:flex-1 lg:justify-end">
             <a href="login.php" class="text-lg font-semibold btn btn-success"> <i
-                    class="fa-solid fa-right-to-bracket"></i>Log in
+                    class="fa-solid fa-right-to-bracket"></i>Login
             </a>
-            <a href="signup.php" class="text-lg font-semibold btn btn-success"><i class="fa-solid fa-user"></i>Sign in
+            <a href="signup.php" class="text-lg font-semibold btn btn-success"><i class="fa-solid fa-user"></i>Sign Up
             </a>
             <div class="dropdown dropdown-left">
                 <div tabindex="0" role="button" class="btn">

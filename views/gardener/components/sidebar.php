@@ -7,8 +7,8 @@ $current_page = basename($_SERVER['PHP_SELF']);
     <ul class="menu bg-base-200 text-base-content h-full w-80 p-4">
 
         <!-- Gardener Dashboard -->
-        <li class="text-lg <?= ($current_page == 'dashboard.php') ? 'bg-primary text-white' : ''; ?>">
-            <a href="dashboard.php"><i class="fa-solid fa-chart-line"></i> Dashboard</a>
+        <li class="text-lg <?= ($current_page == 'index.php') ? 'bg-primary text-white' : ''; ?>">
+            <a href="index.php"><i class="fa-solid fa-chart-line"></i> Dashboard</a>
         </li>
 
         <!-- Hire Requests -->
@@ -24,9 +24,6 @@ $current_page = basename($_SERVER['PHP_SELF']);
         <li class="menu-title">Profile Management</li>
         <li class="text-lg <?= ($current_page == 'update_profile.php') ? 'bg-primary text-white' : ''; ?>">
             <a href="update_profile.php"><i class="fa-solid fa-user-edit"></i> Update Profile</a>
-        </li>
-        <li class="text-lg <?= ($current_page == 'change_password.php') ? 'bg-primary text-white' : ''; ?>">
-            <a href="change_password.php"><i class="fa-solid fa-key"></i> Change Password</a>
         </li>
 
         <!-- Logout -->
