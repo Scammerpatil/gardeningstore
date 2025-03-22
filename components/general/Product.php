@@ -1,20 +1,6 @@
 <?php
-$servername = "localhost";
-$username = "root";
-$password = "";
-$dbname = "gardeningstore";
-
-$conn = new mysqli($servername, $username, $password);
-
-if ($conn->connect_error) {
-    die("Connection failed: " . $conn->connect_error);
-}
-$db_create_query = "CREATE DATABASE IF NOT EXISTS $dbname";
-if (!$conn->query($db_create_query)) {
-    die("Database creation failed: " . $conn->error);
-}
-$conn->select_db($dbname);
-$query = "SELECT name, category, subcategory, price, description, image FROM products";
+include "./server/database.php";
+$query = "SELECT product_id,name, category, subcategory, price, shortdesc, size, image FROM products";
 $result = $conn->query($query);
 ?>
 
@@ -56,15 +42,16 @@ $result = $conn->query($query);
                 ?>
 
                 <!-- Product Card -->
-                <div
-                    class="card w-80 bg-base-100 shadow-xl single_product_item <?= $categoryClass . ' ' . $subcategoryClass; ?>">
+                <div onclick="window.location.href='product.php?id=<?= htmlspecialchars($row['product_id']); ?>'"
+                    class="card w-80 bg-base-100 shadow-xl single_product_item cursor-pointer <?= $categoryClass . ' ' . $subcategoryClass; ?>">
                     <figure>
                         <img src="<?= $imageSrc; ?>" alt="<?= htmlspecialchars($row['name']); ?>"
                             class="h-48 w-full object-contain bg-blend-overlay" />
                     </figure>
                     <div class="card-body text-center">
                         <h2 class="card-title justify-center"><?= htmlspecialchars($row['name']); ?></h2>
-                        <p><?= htmlspecialchars($row['description']); ?></p>
+                        <p><?= htmlspecialchars($row['shortdesc']); ?></p>
+                        <p><?= htmlspecialchars($row['size']) ?></p>
                         <h3 class="text-xl font-semibold text-primary">₹<?= number_format($row['price'], 2); ?></h3>
                         <div class="card-actions justify-center">
                             <a href="login.php" class="btn btn-secondary">

@@ -23,19 +23,7 @@
                         id="grid-email" type="email" name="email" placeholder="Enter Your Email">
                 </div>
             </div>
-            <div class="w-full px-3 mb-6">
-                <label class="block uppercase tracking-wide text-base-content text-base font-bold mb-2"
-                    for="grid-state">
-                    User Type
-                </label>
-                <select
-                    class="appearance-none block w-full bg-base-100 text-base-content rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-base-200 border border-base-content"
-                    name="user_type" id="grid-state">
-                    <option>Choose User Type</option>
-                    <option value="customer">Customer</option>
-                    <option value="gardener">Gardener</option>
-                </select>
-            </div>
+            <input type="hidden" name="user_type" value="<?php echo $userType; ?>">
             <div class="w-full mb-6">
                 <div class="w-full px-3 relative">
                     <label class="block uppercase tracking-wide text-base-content text-base font-bold mb-2"

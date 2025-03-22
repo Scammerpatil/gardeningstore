@@ -2,23 +2,29 @@
 $page_title = "Your Cart";
 ob_start();
 ?>
+<h2 class="text-3xl font-bold text-center uppercase">Your Cart</h2>
+<div id="cart-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mt-6">
+</div>
 
-<section class="container mx-auto py-10">
-    <h1 class="text-4xl font-bold text-center">Your Cart</h1>
-    <!-- Cart Items Container -->
-    <div id="cart-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mt-6">
-        <!-- Cart items will be loaded here dynamically -->
-    </div>
+<div class="flex flex-wrap mt-6">
+    <div class="w-full px-3 mb-6 md:mb-0">
+        <label class="block uppercase tracking-wide text-base-content text-base font-bold mb-2" for="customizing">
+            Customizing Your Order
+        </label>
+        <textarea class="textarea textarea-bordered textarea-primary w-full" id="customizing" name="customizing"
+            placeholder="Customize Your Orders" required>
+        </textarea>
 
-    <!-- Total & Checkout Section -->
-    <div class="mt-8 text-center">
-        <h2 class="text-2xl font-bold">Total Amount: ₹<span id="total-amount">0.00</span></h2>
-        <div class="flex justify-center gap-4 mt-4">
-            <button class="btn btn-error" id="clear_cart">Clear Cart</button>
-            <button id="placeOrder" class="btn btn-primary">Checkout</button>
-        </div>
     </div>
-</section>
+</div>
+
+<div class="mt-8 text-center">
+    <h2 class="text-2xl font-bold">Total Amount: ₹<span id="total-amount">0.00</span></h2>
+    <div class="flex justify-center gap-4 mt-4">
+        <button class="btn btn-error" id="clear_cart">Clear Cart</button>
+        <button id="placeOrder" class="btn btn-primary">Checkout</button>
+    </div>
+</div>
 
 <script>
     document.addEventListener("DOMContentLoaded", function () {
@@ -33,7 +39,7 @@ ob_start();
             let totalAmount = 0;
 
             if (cart.length === 0) {
-                cartContainer.innerHTML = "<p class='text-center text-lg'>Your cart is empty.</p>";
+                cartContainer.innerHTML = "<p class='text-center text-lg w-full'>Your cart is empty.</p>";
                 totalAmountElement.textContent = "0.00";
                 return;
             }
@@ -42,7 +48,7 @@ ob_start();
                 totalAmount += item.price * item.quantity;
 
                 const cartItem = document.createElement("div");
-                cartItem.classList.add("card", "bg-base-100", "shadow-xl", "p-5");
+                cartItem.classList.add("card", "bg-base-300", "shadow-xl", "p-5");
                 cartItem.setAttribute("data-index", index);
 
                 cartItem.innerHTML = `
@@ -110,10 +116,17 @@ ob_start();
                 return;
             }
 
+            const customizingText = document.getElementById("customizing").value.trim();
+
+            const orderData = {
+                cart: cart,
+                customizing: customizingText
+            };
+
             fetch("../../server/user/place_order.php", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
-                body: JSON.stringify(cart)
+                body: JSON.stringify(orderData)
             })
                 .then(response => response.json())
                 .then(data => {

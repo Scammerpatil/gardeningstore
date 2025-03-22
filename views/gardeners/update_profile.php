@@ -2,12 +2,6 @@
 session_start();
 include "../../server/database.php";
 
-// Ensure the user is logged in and is a gardener
-if (!isset($_SESSION["user_type"]) || $_SESSION["user_type"] !== "gardener") {
-    header("Location: ../../login.php");
-    exit();
-}
-
 $gardener_id = $_SESSION["user_id"];
 if (!isset($gardener_id)) {
     header("Location: /gardeningstore/login.php");
@@ -16,7 +10,6 @@ if (!isset($gardener_id)) {
 $page_title = "Update Profile";
 ob_start();
 
-// Fetch Gardener Details
 $query = "SELECT name, email, phone_no, charges FROM gardeners WHERE gardener_id = ?";
 $stmt = $conn->prepare($query);
 $stmt->bind_param("i", $gardener_id);
@@ -40,7 +33,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $stmt->bind_param("ssssi", $name, $email, $phone_no, $charges, $gardener_id);
 
         if ($stmt->execute()) {
-            echo "<script>alert('Profile updated successfully!'); window.location.href='/gardeningstore/views/gardener/';</script>";
+            echo "<script>alert('Profile updated successfully!'); window.location.href='/gardeningstore/views/gardeners/';</script>";
         } else {
             echo "<script>alert('Failed to update profile. Try again!');</script>";
         }
@@ -74,7 +67,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             </div>
 
             <div class="form-group mb-4">
-                <label class="block text-lg font-semibold">Charges (₹ per hour)</label>
+                <label class="block text-lg font-semibold">Charges (₹ Per Date)</label>
                 <input type="number" name="charges" value="<?= htmlspecialchars($gardener['charges'] ?? '') ?>"
                     class="form-control w-full p-2 border rounded-lg">
             </div>

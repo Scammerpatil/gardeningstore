@@ -14,10 +14,12 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $subcategory = $_POST['subcategory'];
     $price = $_POST['price'];
     $quantity = $_POST['quantity'];
-    $description = $_POST['description'];
+    $shortdesc = $_POST['shortdesc'];
+    $longdesc = $_POST['longdesc'];
+    $size = $_POST['size'];
     $image = $_FILES['image'];
 
-    if (empty($name) || empty($category) || empty($subcategory) || empty($price) || empty($quantity) || empty($description) || empty($image['tmp_name'])) {
+    if (empty($name) || empty($category) || empty($subcategory) || empty($price) || empty($quantity) || empty($longdesc) || empty($shortdesc) || empty($size) || empty($image['tmp_name'])) {
         echo "All fields are required!";
         exit;
     }
@@ -28,11 +30,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         echo "Failed to read image file.";
         exit;
     }
-    $stmt = $conn->prepare("INSERT INTO products (name, category, subcategory, price, quantity, description, image) VALUES (?, ?, ?, ?, ?, ?, ?)");
+    $stmt = $conn->prepare("INSERT INTO products (name, category, subcategory, price, quantity, shortdesc,longdesc, size, image) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)");
 
-    $stmt->bind_param("sssdisb", $name, $category, $subcategory, $price, $quantity, $description, $null);
+    $stmt->bind_param("sssdisssb", $name, $category, $subcategory, $price, $quantity, $shortdesc, $longdesc, $size, $null);
 
-    $stmt->send_long_data(6, $imageData);
+    $stmt->send_long_data(9, $imageData);
 
     if ($stmt->execute()) {
         echo "Product added successfully!";

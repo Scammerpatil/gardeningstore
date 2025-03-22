@@ -3,90 +3,75 @@ $page_title = "Dashboard";
 ob_start();
 ?>
 <?php
-$servername = "localhost";
-$username = "root";
-$password = "";
-$dbname = "gardeningstore";
-
-$conn = new mysqli($servername, $username, $password);
-
-if ($conn->connect_error) {
-    die("Connection failed: " . $conn->connect_error);
-}
-$db_create_query = "CREATE DATABASE IF NOT EXISTS $dbname";
-if (!$conn->query($db_create_query)) {
-    die("Database creation failed: " . $conn->error);
-}
-$conn->select_db($dbname);
-$query = "SELECT product_id, name, category, subcategory, price, description, image FROM products";
+include "../../server/database.php";
+$query = "SELECT product_id, name, category, subcategory, price, shortdesc, longdesc, size, image FROM products";
 $result = $conn->query($query);
 ?>
 
-<section class="">
-    <div class="container mx-auto px-4">
-        <h1 class="text-5xl font-bold text-center text-base-content uppercase">GARDENING STORE</h1>
-        <p class="text-xl text-center my-2">Explore our Store</p>
+<div class="container mx-auto px-4">
+    <h1 class="text-5xl font-bold text-center text-base-content uppercase">GARDENING STORE</h1>
+    <p class="text-xl text-center my-2">Explore our Store</p>
 
-        <!-- Category Filters -->
-        <div class="flex flex-wrap justify-center gap-4 my-6">
+    <!-- Category Filters -->
+    <div class="flex flex-wrap justify-center gap-4 my-6">
+        <?php
+        $categories = [
+            'Plants' => 'plants',
+            'Gardening Tool' => 'gardening-tool',
+            'Seeds' => 'seeds',
+            'Bulb' => 'bulb',
+            'Soil & Fertilizer' => 'soil-fertilizer',
+            'Pebbles' => 'pebbles',
+            'Accessories' => 'accessories'
+        ];
+        ?>
+        <button class="tab text-lg hover:text-primary filter-btn" data-filter="*">All</button>
+        <?php foreach ($categories as $categoryName => $categoryFilter): ?>
+            <button class="tab text-lg hover:text-primary filter-btn"
+                data-filter=".<?= $categoryFilter; ?>"><?= $categoryName; ?></button>
+        <?php endforeach; ?>
+    </div>
+
+    <!-- Subcategory Filters -->
+    <div class="flex flex-wrap justify-center gap-2 my-4" id="subcategory-filters"></div>
+
+    <!-- Product Grid -->
+    <div class="grid grid-cols-1 md:grid-cols-1 lg:grid-cols-3 gap-6 p-5" id="product-grid">
+        <?php while ($row = $result->fetch_assoc()): ?>
             <?php
-            $categories = [
-                'Plants' => 'plants',
-                'Gardening Tool' => 'gardening-tool',
-                'Seeds' => 'seeds',
-                'Bulb' => 'bulb',
-                'Soil & Fertilizer' => 'soil-fertilizer',
-                'Pebbles' => 'pebbles',
-                'Accessories' => 'accessories'
-            ];
+            $categoryClass = strtolower(str_replace([' ', '&'], ['-', 'and'], $row['category']));
+            $subcategoryClass = strtolower(str_replace([' ', '&'], ['-', 'and'], $row['subcategory']));
+            $imageSrc = "data:image/jpeg;base64," . base64_encode($row['image']);
             ?>
-            <button class="tab text-lg hover:text-primary filter-btn" data-filter="*">All</button>
-            <?php foreach ($categories as $categoryName => $categoryFilter): ?>
-                <button class="tab text-lg hover:text-primary filter-btn"
-                    data-filter=".<?= $categoryFilter; ?>"><?= $categoryName; ?></button>
-            <?php endforeach; ?>
-        </div>
 
-        <!-- Subcategory Filters -->
-        <div class="flex flex-wrap justify-center gap-2 my-4" id="subcategory-filters"></div>
-
-        <!-- Product Grid -->
-        <div class="grid grid-cols-1 md:grid-cols-1 lg:grid-cols-3 gap-6 p-5" id="product-grid">
-            <?php while ($row = $result->fetch_assoc()): ?>
-                <?php
-                $categoryClass = strtolower(str_replace([' ', '&'], ['-', 'and'], $row['category']));
-                $subcategoryClass = strtolower(str_replace([' ', '&'], ['-', 'and'], $row['subcategory']));
-                $imageSrc = "data:image/jpeg;base64," . base64_encode($row['image']);
-                ?>
-
-                <!-- Product Card -->
-                <div
-                    class="card max-w-80 bg-base-100 shadow-xl single_product_item <?= $categoryClass . ' ' . $subcategoryClass; ?>">
-                    <figure>
-                        <img src="<?= $imageSrc; ?>" alt="<?= htmlspecialchars($row['name']); ?>"
-                            class="h-48 w-full object-contain bg-blend-overlay" />
-                    </figure>
-                    <div class="card-body text-center">
-                        <h2 class="card-title justify-center"><?= htmlspecialchars($row['name']); ?></h2>
-                        <p><?= htmlspecialchars($row['description']); ?></p>
-                        <h3 class="text-xl font-semibold text-primary">₹<?= number_format($row['price'], 2); ?></h3>
-                        <div class="card-actions justify-center">
-                            <button class="btn btn-secondary add-to-cart" data-id="<?= $row['product_id']; ?>"
-                                data-name="<?= htmlspecialchars($row['name']); ?>" data-price="<?= $row['price']; ?>"
-                                data-image="<?= $imageSrc; ?>">
-                                <i class="fa-solid fa-cart-shopping"></i> Add to Cart
-                            </button>
-                            <a href="cart.php" class="btn btn-primary">
-                                <i class="fa-solid fa-bag-shopping"></i> Buy Now!
-                            </a>
-                        </div>
+            <!-- Product Card -->
+            <div class="card max-w-80 bg-base-100 shadow-xl single_product_item <?= $categoryClass . ' ' . $subcategoryClass; ?>"
+                onclick="window.location.href='product.php?id=<?= $row['product_id']; ?>';">
+                <figure>
+                    <img src="<?= $imageSrc; ?>" alt="<?= htmlspecialchars($row['name']); ?>"
+                        class="h-48 w-full object-contain bg-blend-overlay" />
+                </figure>
+                <div class="card-body text-center">
+                    <h2 class="card-title justify-center"><?= htmlspecialchars($row['name']); ?></h2>
+                    <p><?= htmlspecialchars($row['shortdesc']); ?></p>
+                    <p><?= htmlspecialchars($row['longdesc']); ?></p>
+                    <h3 class="text-xl font-semibold text-primary">₹<?= number_format($row['price'], 2); ?></h3>
+                    <div class="card-actions justify-center">
+                        <button class="btn btn-secondary add-to-cart" data-id="<?= $row['product_id']; ?>"
+                            data-name="<?= htmlspecialchars($row['name']); ?>" data-price="<?= $row['price']; ?>"
+                            data-image="<?= $imageSrc; ?>">
+                            <i class="fa-solid fa-cart-shopping"></i> Add to Cart
+                        </button>
+                        <a href="cart.php" class="btn btn-primary">
+                            <i class="fa-solid fa-bag-shopping"></i> Buy Now!
+                        </a>
                     </div>
                 </div>
+            </div>
 
-            <?php endwhile; ?>
-        </div>
+        <?php endwhile; ?>
     </div>
-</section>
+</div>
 
 <script>
     document.addEventListener("DOMContentLoaded", function () {

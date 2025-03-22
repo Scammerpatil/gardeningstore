@@ -1,16 +1,12 @@
 <?php
-// Include database connection
 include "../database.php";
 session_start();
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-    // Retrieve form data
     $email = trim($_POST['email']);
     $password = trim($_POST['password']);
-    $user_type = trim($_POST['user_type']);
 
-    // Validate inputs
-    if (empty($email) || empty($password) || empty($user_type)) {
+    if (empty($email) || empty($password)) {
         die("All fields are required.");
     }
 
@@ -22,55 +18,38 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         exit();
     }
 
-    // Determine table based on user type
-    $table = '';
-    if ($user_type === 'customer') {
-        $table = 'Customers';
-    } elseif ($user_type === 'gardener') {
-        $table = 'Gardeners';
-    } elseif ($user_type === 'seller') {
-        $table = 'Sellers';
-    } else {
-        die("Invalid user type.");
+    $userTables = [
+        'Customers' => 'customer_id',
+        'Gardeners' => 'gardener_id'
+    ];
+
+    $userFound = false;
+
+    foreach ($userTables as $table => $idColumn) {
+        $query = "SELECT * FROM $table WHERE email = ?";
+        $stmt = $conn->prepare($query);
+        $stmt->bind_param("s", $email);
+        $stmt->execute();
+        $result = $stmt->get_result();
+
+        if ($result->num_rows > 0) {
+            $user = $result->fetch_assoc();
+
+            if (password_verify($password, $user['password_hash'])) {
+                $_SESSION['user_id'] = $user[$idColumn];
+                $_SESSION['name'] = $user['name'];
+                $_SESSION['user_type'] = strtolower($table);
+                header("Location: /gardeningstore/views/" . strtolower($table) . "/");
+                $userFound = true;
+                exit();
+            } else {
+                die("Invalid password.");
+            }
+        }
     }
 
-    // Check if the user exists in the respective table
-    $query = "SELECT * FROM $table WHERE email = ?";
-    $stmt = $conn->prepare($query);
-    $stmt->bind_param("s", $email);
-    $stmt->execute();
-    $result = $stmt->get_result();
-
-    if ($result->num_rows > 0) {
-        $user = $result->fetch_assoc();
-
-        // Verify the password
-        if (password_verify($password, $user['password_hash'])) {
-            if ($user_type === 'customer') {
-                $user_id = 'customer_id';
-            } elseif ($user_type === 'gardener') {
-                $user_id = 'gardener_id';
-            } elseif ($user_type === 'seller') {
-                $user_id = 'seller_id';
-            }
-            $_SESSION['user_id'] = $user[$user_id];
-            $_SESSION['name'] = $user['name'];
-            $_SESSION['user_type'] = $user_type;
-
-            // Redirect based on user type
-            if ($user_type === 'customer') {
-                header("Location: /gardeningstore/views/customer/");
-            } elseif ($user_type === 'gardener') {
-                header("Location: /gardeningstore/views/gardener/");
-            } elseif ($user_type === 'seller') {
-                header("Location: /gardeningstore/views/seller/");
-            }
-            exit();
-        } else {
-            die("Invalid password.");
-        }
-    } else {
-        die("No account found for this email and user type.");
+    if (!$userFound) {
+        die("No account found for this email.");
     }
 }
 

@@ -2,7 +2,7 @@
 $current_page = basename($_SERVER['PHP_SELF']);
 ?>
 
-<div class="drawer-side h-[calc(100vh-6.3rem)] overflow-y-auto">
+<div class="drawer-side h-screen overflow-y-auto">
     <label for="my-drawer-2" aria-label="close sidebar" class="drawer-overlay"></label>
     <ul class="menu bg-base-200 text-base-content h-full w-80 p-4">
         <!-- Dashboard -->
@@ -30,9 +30,7 @@ $current_page = basename($_SERVER['PHP_SELF']);
         <li class="text-lg <?= ($current_page == 'orders.php') ? 'bg-primary text-white' : ''; ?>">
             <a href="orders.php"><i class="fa-solid fa-box"></i> Orders</a>
         </li>
-        <li class="text-lg <?= ($current_page == 'inventory.php') ? 'bg-primary text-white' : ''; ?>">
-            <a href="inventory.php"><i class="fa-solid fa-warehouse"></i> Inventory (GoDown)</a>
-        </li>
+
         <!-- Logout -->
         <li class="text-lg">
             <a href="../../server/logout.php" class="text-red-500"><i class="fa-solid fa-sign-out-alt"></i> Logout</a>
