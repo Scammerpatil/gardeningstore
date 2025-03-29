@@ -7,7 +7,6 @@ include "../../server/database.php";
 $query = "SELECT product_id, name, category, subcategory, price, shortdesc, longdesc, size, image FROM products";
 $result = $conn->query($query);
 ?>
-
 <div class="container mx-auto px-4">
     <h1 class="text-5xl font-bold text-center text-base-content uppercase">GARDENING STORE</h1>
     <p class="text-xl text-center my-2">Explore our Store</p>
@@ -45,9 +44,8 @@ $result = $conn->query($query);
             ?>
 
             <!-- Product Card -->
-            <div class="card max-w-80 bg-base-100 shadow-xl single_product_item <?= $categoryClass . ' ' . $subcategoryClass; ?>"
-                onclick="window.location.href='product.php?id=<?= $row['product_id']; ?>';">
-                <figure>
+            <div class="card max-w-80 bg-base-100 shadow-xl single_product_item <?= $categoryClass . ' ' . $subcategoryClass; ?>">
+                <figure onclick="window.location.href='product.php?id=<?= $row['product_id']; ?>';" style="cursor:pointer;">
                     <img src="<?= $imageSrc; ?>" alt="<?= htmlspecialchars($row['name']); ?>"
                         class="h-48 w-full object-contain bg-blend-overlay" />
                 </figure>
@@ -72,7 +70,6 @@ $result = $conn->query($query);
         <?php endwhile; ?>
     </div>
 </div>
-
 <script>
     document.addEventListener("DOMContentLoaded", function () {
         const products = document.querySelectorAll(".single_product_item");
@@ -135,50 +132,17 @@ $result = $conn->query($query);
         });
     });
 </script>
+
 <script>
     document.addEventListener("DOMContentLoaded", function () {
-        const cart = JSON.parse(localStorage.getItem("cart")) || [];
-
-        function updateCartCount() {
-            document.getElementById("cart-count").innerText = cart.length;
-        }
-
-        function saveCart() {
-            localStorage.setItem("cart", JSON.stringify(cart));
-            updateCartCount();
-            alert("Cart updated!");
-        }
-
         document.querySelectorAll(".add-to-cart").forEach(button => {
-            button.addEventListener("click", function () {
-                const productId = this.getAttribute("data-id");
-                const productName = this.getAttribute("data-name");
-                const productPrice = this.getAttribute("data-price");
-                const productImage = this.getAttribute("data-image");
-
-                const existingItem = cart.find(item => item.id === productId);
-                if (existingItem) {
-                    existingItem.quantity += 1;
-                } else {
-                    cart.push({
-                        id: productId,
-                        name: productName,
-                        price: parseFloat(productPrice),
-                        image: productImage,
-                        quantity: 1
-                    });
-                }
-
-                saveCart();
-                console.log(cart);
-                alert("Added to cart!");
+            button.addEventListener("click", function (event) {
+                event.preventDefault();
+                alert("Item is added to cart!");
             });
         });
-
-        updateCartCount();
     });
 </script>
-
 
 <?php $conn->close(); ?>
 <?php

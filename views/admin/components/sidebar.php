@@ -31,9 +31,6 @@ $current_page = basename($_SERVER['PHP_SELF']);
             <a href="orders.php"><i class="fa-solid fa-box"></i> Orders</a>
         </li>
 
-        <!-- Logout -->
-        <li class="text-lg">
-            <a href="../../server/logout.php" class="text-red-500"><i class="fa-solid fa-sign-out-alt"></i> Logout</a>
-        </li>
+
     </ul>
 </div>

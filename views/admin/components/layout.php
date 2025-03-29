@@ -10,7 +10,7 @@
             <?php include '../../components/admin/Navbar.php'; ?>
 
             <!-- Header Image -->
-            <div class="hero h-80 relative bg-overlay z-10 overflow-hidden"
+            <div class="hero h-40 relative bg-overlay z-10 overflow-hidden"
                 style="background-image: url(../../img/bg-img/24.jpg);">
                 <div class="hero-content text-center">
                     <h1 class="text-4xl font-semibold text-white uppercase"><?= $page_title; ?></h1>

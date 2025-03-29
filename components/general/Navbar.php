@@ -5,10 +5,10 @@
             <div class="flex flex-col items-start gap-1">
                 <div class="flex items-baseline gap-[2px]">
                     <span class="text-primary font-extrabold text-xl">
-                        GREEN
+                        Modern 
                     </span>
                     <span class="text-accent font-semibold text-xl">
-                        WORLD
+                        Nursery
                     </span>
                 </div>
                 <hr class="w-full border border-white" />

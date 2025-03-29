@@ -26,9 +26,6 @@ $current_page = basename($_SERVER['PHP_SELF']);
             <a href="update_profile.php"><i class="fa-solid fa-user-edit"></i> Update Profile</a>
         </li>
 
-        <!-- Logout -->
-        <li class="text-lg">
-            <a href="../../server/logout.php" class="text-red-500"><i class="fa-solid fa-sign-out-alt"></i> Logout</a>
-        </li>
+    
     </ul>
 </div>

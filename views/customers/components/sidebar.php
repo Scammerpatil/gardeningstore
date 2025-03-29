@@ -29,8 +29,6 @@ $user_type = $_SESSION['user_type'] ?? 'customer';
         <li class="text-lg <?= ($current_page == 'profile.php') ? 'bg-primary text-white' : ''; ?>">
             <a href="profile.php"><i class="fa-solid fa-user"></i> Profile</a>
         </li>
-        <li class="text-lg">
-            <a href="../../server/logout.php" class="text-red-500"><i class="fa-solid fa-sign-out-alt"></i> Logout</a>
-        </li>
+       
     </ul>
 </div>
