@@ -1,22 +1,28 @@
 <?php
 $page_title = "Your Cart";
+$customizing = isset($_GET['customize']) ? true : false;
 ob_start();
 ?>
 <h2 class="text-3xl font-bold text-center uppercase">Your Cart</h2>
 <div id="cart-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mt-6">
 </div>
 
-<div class="flex flex-wrap mt-6">
-    <div class="w-full px-3 mb-6 md:mb-0">
-        <label class="block uppercase tracking-wide text-base-content text-base font-bold mb-2" for="customizing">
-            Customizing Your Order
-        </label>
-        <textarea class="textarea textarea-bordered textarea-primary w-full" id="customizing" name="customizing"
-            placeholder="Customize Your Orders" required>
-        </textarea>
-
+<?php if ($customizing): ?>
+    <div class="alert alert-info text-center mt-4">
+        <strong>Note:</strong> You can customize your selected items in the cart.
     </div>
-</div>
+    <div class="flex flex-wrap mt-6">
+        <div class="w-full px-3 mb-6 md:mb-0">
+            <label class="block uppercase tracking-wide text-base-content text-base font-bold mb-2" for="customizing">
+                Customizing Your Order
+            </label>
+            <textarea class="textarea textarea-bordered textarea-primary w-full" id="customizing" name="customizing"
+                placeholder="Customize Your Orders" required>
+            </textarea>
+
+        </div>
+    </div>
+<?php endif; ?>
 
 <div class="mt-8 text-center">
     <h2 class="text-2xl font-bold">Total Amount: ₹<span id="total-amount">0.00</span></h2>
@@ -39,7 +45,7 @@ ob_start();
             let totalAmount = 0;
 
             if (cart.length === 0) {
-                cartContainer.innerHTML = "<p class='text-center text-lg w-full'>Your cart is empty.</p>";
+                cartContainer.innerHTML = "<p class='text-xl font-bold mx-3 uppercase'>Your cart is empty.</p>";
                 totalAmountElement.textContent = "0.00";
                 return;
             }
@@ -50,6 +56,11 @@ ob_start();
                 const cartItem = document.createElement("div");
                 cartItem.classList.add("card", "bg-base-300", "shadow-xl", "p-5");
                 cartItem.setAttribute("data-index", index);
+
+                let customizeButton = "";
+                if (item.category === "Plant") {
+                    customizeButton = `<button class="btn btn-sm btn-info customize-btn" data-index="${index}">Want to customize?</button>`;
+                }
 
                 cartItem.innerHTML = `
                 <figure><img src="${item.image}" class="h-48 w-full object-contain"></figure>
@@ -62,6 +73,7 @@ ob_start();
                         <button class="btn btn-sm btn-secondary qty-minus" data-index="${index}">-</button>
                         <button class="btn btn-sm btn-error remove-item" data-index="${index}">Remove</button>
                     </div>
+                    ${customizeButton}  <!-- Only show customize button for plants -->
                 </div>
             `;
 
@@ -82,6 +94,8 @@ ob_start();
                 updateQuantity(index, -1);
             } else if (event.target.classList.contains("remove-item")) {
                 removeFromCart(index);
+            } else if (event.target.classList.contains("customize-btn")) {
+                redirectToCustomizePage(index);
             }
         });
 
@@ -116,11 +130,8 @@ ob_start();
                 return;
             }
 
-            const customizingText = document.getElementById("customizing").value.trim();
-
             const orderData = {
                 cart: cart,
-                customizing: customizingText
             };
 
             fetch("../../server/user/place_order.php", {
@@ -141,10 +152,12 @@ ob_start();
                 .catch(error => console.error("Error:", error));
         }
 
+        function redirectToCustomizePage(index) {
+            window.location.href = "customize.php?item=" + index;
+        }
 
         updateCartDisplay();
     });
-
 </script>
 
 <?php

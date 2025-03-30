@@ -13,9 +13,19 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $category = $_POST['category'];
     $quantity = $_POST['quantity'];
 
-    $stmt = $conn->prepare("INSERT INTO plant_sales (user_id, plant_name, category, quantity, status) VALUES (?, ?, ?, ?, 'Pending')");
-    $stmt->bind_param("issi", $user_id, $plant_name, $category, $quantity);
+    // Handle the image upload
+    if (isset($_FILES['image']) && $_FILES['image']['error'] == 0) {
+        $image = file_get_contents($_FILES['image']['tmp_name']); // Read image file into binary data
+    } else {
+        echo "<p class='text-error font-bold text-center'>Error with image upload.</p>";
+        exit;
+    }
 
+    // Prepare the SQL query to insert the plant listing and image
+    $stmt = $conn->prepare("INSERT INTO plant_sales (user_id, plant_name, category, quantity, image, status) VALUES (?, ?, ?, ?, ?, 'Pending')");
+    $stmt->bind_param("issis", $user_id, $plant_name, $category, $quantity, $image); // 'i' for integer, 's' for string, 'b' for blob
+
+    // Execute the query
     if ($stmt->execute()) {
         echo "<p class='text-success font-bold text-center'>Plant listing submitted successfully. Awaiting admin approval.</p>";
     } else {
@@ -26,7 +36,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 }
 ?>
 <h2 class="text-3xl font-bold text-center uppercase">Sell Your Plant</h2>
-<form action="" method="POST" class="mt-4">
+<form action="" method="POST" class="mt-4" enctype="multipart/form-data"> <!-- Add enctype="multipart/form-data" -->
     <div class="flex flex-wrap mb-6">
         <div class="w-full px-3 mb-6 md:mb-0">
             <label class="block uppercase tracking-wide text-base-content text-base font-bold mb-2" for="name">
@@ -68,7 +78,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 }
                 ?>
             </select>
-
         </div>
     </div>
     <div class="flex flex-wrap mb-6">
@@ -79,6 +88,15 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             <input
                 class="appearance-none block w-full bg-base-100 text-base-content rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-base-200 border border-base-content"
                 id="quantity" type="number" name="quantity" placeholder="Enter Product Quantity" required>
+        </div>
+    </div>
+    <div class="flex flex-wrap mb-6">
+        <div class="w-full px-3 mb-6 md:mb-0">
+            <label class="block uppercase tracking-wide text-base-content text-base font-bold mb-2" for="image">
+                Image
+            </label>
+            <input class="file-input file-input-bordered w-full" id="image" type="file" name="image"
+                placeholder="Enter Product Quantity" required>
         </div>
     </div>
     <div class="flex flex-wrap mb-6">

@@ -44,9 +44,8 @@ $result = $conn->query($query);
                 <!-- Product Card -->
                 <div onclick="window.location.href='product.php?id=<?= htmlspecialchars($row['product_id']); ?>'"
                     class="card w-80 bg-base-100 shadow-xl single_product_item cursor-pointer <?= $categoryClass . ' ' . $subcategoryClass; ?>">
-                    <figure>
-                        <img src="<?= $imageSrc; ?>" alt="<?= htmlspecialchars($row['name']); ?>"
-                            class="h-48 w-full object-contain bg-blend-overlay" />
+                    <figure class="h-48 w-full object-contain bg-blend-overlay">
+                        <img src="<?= $imageSrc; ?>" alt="<?= htmlspecialchars($row['name']); ?>" />
                     </figure>
                     <div class="card-body text-center">
                         <h2 class="card-title justify-center"><?= htmlspecialchars($row['name']); ?></h2>

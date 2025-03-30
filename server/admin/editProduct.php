@@ -41,7 +41,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     }
 
     if ($stmt->execute()) {
-        echo "<script>alert('Product updated successfully!'); window.location.href='product.php';</script>";
+        echo "<script>alert('Product updated successfully!');  window.history.back();</script>";
     } else {
         echo "<script>alert('Error: " . $stmt->error . "'); window.history.back();</script>";
     }

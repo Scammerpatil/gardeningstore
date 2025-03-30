@@ -23,8 +23,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         echo "<p class='text-success font-bold text-center'>Response submitted.</p>";
 
         if ($acceptance === "Accepted") {
-            // Fetch plant details
-            $query = $conn->prepare("SELECT plant_name, category, quantity, suggested_price FROM plant_sales WHERE id = ?");
+            $query = $conn->prepare("SELECT plant_name, category, quantity, suggested_price, image FROM plant_sales WHERE id = ?");
             $query->bind_param("i", $sale_id);
             $query->execute();
             $result = $query->get_result();
@@ -34,23 +33,22 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             $subcategory = $plant['category'];
             $quantity = $plant['quantity'];
             $price = $plant['suggested_price'];
+            $image = $plant['image'];
 
-            $check_query = $conn->prepare("SELECT product_id, quantity FROM products WHERE name = ? and category = 'plant' and subcategory = ?");
+            $check_query = $conn->prepare("SELECT product_id, quantity FROM products WHERE name = ? AND category = 'Plant' AND subcategory = ?");
             $check_query->bind_param("ss", $plant_name, $subcategory);
             $check_query->execute();
             $existing_product = $check_query->get_result()->fetch_assoc();
 
             if ($existing_product) {
-                // Update existing plant quantity
                 $new_quantity = $existing_product['quantity'] + $quantity;
                 $update_stmt = $conn->prepare("UPDATE products SET quantity = ? WHERE product_id = ?");
                 $update_stmt->bind_param("ii", $new_quantity, $existing_product['product_id']);
                 $update_stmt->execute();
             } else {
-                // Insert new plant
-                $category = "plant";
-                $insert_stmt = $conn->prepare("INSERT INTO products (name, category, price, quantity) VALUES (?, ?, ?, ?)");
-                $insert_stmt->bind_param("ssdi", $plant_name, $category, $subcategory, $price, $quantity);
+                $category = "Plant";
+                $insert_stmt = $conn->prepare("INSERT INTO products (name, category, subcategory, price, quantity, image) VALUES (?, ?, ?, ?, ?, ?)");
+                $insert_stmt->bind_param("ssssis", $plant_name, $category, $subcategory, $price, $quantity, $image);
                 $insert_stmt->execute();
             }
         }
@@ -66,6 +64,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         <thead>
             <tr class="bg-base-200">
                 <th class="border px-4 py-2">Plant Name</th>
+                <th class="border px-4 py-2">Image</th>
                 <th class="border px-4 py-2">Category</th>
                 <th class="border px-4 py-2">Price</th>
                 <th class="border px-4 py-2">Admin Action</th>
@@ -77,25 +76,42 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             <?php while ($row = $result->fetch_assoc()) { ?>
                 <tr>
                     <td class="border px-4 py-2 text-center"><?= $row['plant_name'] ?></td>
+                    <td class="border px-4 py-2 text-center"><?php
+                    if ($row['image']) {
+                        $image_data = base64_encode($row['image']);
+                        echo "<img src='data:image/jpeg;base64,$image_data' alt='Plant Image' class='w-20 h-20 object-cover'>";
+                    } else {
+                        echo "No image available";
+                    }
+                    ?></td>
                     <td class="border px-4 py-2 text-center"><?= $row['category'] ?></td>
                     <td class="border px-4 py-2 text-center"><?= $row['suggested_price'] ?> ₹/piece</td>
                     <td class="border px-4 py-2 text-center"><?= $row['status'] ?></td>
                     <td class="border px-4 py-2 text-center"><?= $row['quantity'] ?></td>
                     <td class="border px-4 py-2 text-center">
-                        <?= $row['seller_acceptance'] == 'Accepted' ?
-                            $row['seller_acceptance'] :
-                            "<form method='POST'>
-                                <input type='hidden' name='sale_id' value='{$row['id']}'>
-                                <button name='acceptance' value='Accepted' class='btn btn-success rounded'>Accept</button>
-                                <button name='acceptance' value='Rejected' class='btn btn-error rounded'>Reject</button>
-                            </form>"
-                            ?>
+                        <?php if ($row['status'] == "Pending") { ?>
+                            Approval Pending From Admin
+                        <?php } elseif ($row['status'] == "Approved") { ?>
+                            <?php if ($row['seller_acceptance'] == 'Pending') { ?>
+                                <form method='POST'>
+                                    <input type='hidden' name='sale_id' value='<?= $row['id'] ?>'>
+                                    <button name='acceptance' value='Accepted' class='btn btn-success rounded'>Accept</button>
+                                    <button name='acceptance' value='Rejected' class='btn btn-error rounded'>Reject</button>
+                                </form>
+                            <?php } elseif ($row['seller_acceptance'] == 'Accepted') { ?>
+                                <p class='text-success font-bold text-center'>Seller has accepted the sale.</p>
+                            <?php } elseif ($row['seller_acceptance'] == 'Rejected') { ?>
+                                <p class='text-error font-bold text-center'>Seller has rejected the sale.</p>
+                            <?php } ?>
+                        <?php } ?>
+
                     </td>
                 </tr>
             <?php } ?>
         </tbody>
     </table>
 </div>
+
 <?php
 $page_content = ob_get_clean();
 include './components/layout.php';

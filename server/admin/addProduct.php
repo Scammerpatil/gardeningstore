@@ -25,11 +25,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     }
 
     $imageData = file_get_contents($image['tmp_name']);
-
     if ($imageData === false) {
-        echo "Failed to read image file.";
+        echo "<script>alert('Failed to read image file.'); window.history.back();</script>";
         exit;
     }
+
     $stmt = $conn->prepare("INSERT INTO products (name, category, subcategory, price, quantity, shortdesc,longdesc, size, image) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)");
 
     $stmt->bind_param("sssdisssb", $name, $category, $subcategory, $price, $quantity, $shortdesc, $longdesc, $size, $null);
@@ -37,8 +37,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $stmt->send_long_data(9, $imageData);
 
     if ($stmt->execute()) {
-        echo "Product added successfully!";
-        echo "$category";
+        echo "<script>alert('Product added successfully!');  window.history.back();</script>";
     } else {
         echo "Error: " . $stmt->error;
     }

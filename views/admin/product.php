@@ -9,7 +9,7 @@ $result = $conn->query($query);
 ?>
 <h2 class="text-3xl font-bold text-center uppercase">Manage Products</h2>
 
-<div role="tablist" class="tabs tabs-bordered tabs-lg mt-4">
+<div role="tablist" class="tabs tabs-boxed tabs-lg mt-4">
 
     <!-- Listed Products Tab -->
     <input type="radio" name="my_tabs_2" role="tab" class="tab text-lg font-semibold" style="width:300px"
@@ -87,6 +87,7 @@ $result = $conn->query($query);
                         <option value="Bulb">Bulb</option>
                         <option value="Soil & Fertilizer">Soil & Fertilizer</option>
                         <option value="Pebble">Pebble</option>
+                        <option value="Pots">Pots</option>
                         <option value="Accessory">Accessory</option>
                     </select>
                 </div>
@@ -183,7 +184,8 @@ $result = $conn->query($query);
         "Bulb": ["Flower Bulbs", "Seasonal Bulbs", "Perennial Bulbs", "Exotic Bulbs", "Indoor Bulbs", "Outdoor Bulbs", "Decorative Bulbs"],
         "Soil & Fertilizer": ["Organic Fertilizer", "Potting Soil", "Coco Peat", "Vermicompost", "Nutrient Mixes", "Soil Amendments", "Specialty Fertilizers"],
         "Pebble": ["Decorative Pebbles", "Natural Stones", "River Rocks", "Colored Pebbles", "Aquarium Pebbles", "Garden Path Pebbles", "Gravel"],
-        "Accessory": ["Plant Stands", "Garden Lighting", "Labels & Markers", "Sprayers & Misters", "Hanging Hooks", "Trellises & Supports", "Garden Storage"]
+        "Accessory": ["Plant Stands", "Garden Lighting", "Labels & Markers", "Sprayers & Misters", "Hanging Hooks", "Trellises & Supports", "Garden Storage"],
+        "Pots": ['Terracotta Pot', 'Plastic Pot', 'Ceramic Pot', 'Hanging Pot', 'Self-Watering Pot', 'Decorative Pot', 'Planter Box']
     };
 
     function updateSubcategories() {

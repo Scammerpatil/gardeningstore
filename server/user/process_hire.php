@@ -14,14 +14,15 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         die("All fields are required.");
     }
 
+    // Check if the gardener is already booked during the selected period
     $stmt = $conn->prepare("
         SELECT hire_date_from, hire_date_to 
         FROM hire 
         WHERE gardener_id = ? 
         AND (
-            (hire_date_from <= ? AND hire_date_to >= ?) OR  -- Selected start date falls inside an existing booking
-            (hire_date_from <= ? AND hire_date_to >= ?) OR  -- Selected end date falls inside an existing booking
-            (hire_date_from >= ? AND hire_date_to <= ?)     -- New booking completely overlaps an existing one
+            (hire_date_from <= ? AND hire_date_to >= ?) OR
+            (hire_date_from <= ? AND hire_date_to >= ?) OR
+            (hire_date_from >= ? AND hire_date_to <= ?)
         )
     ");
     $stmt->bind_param("issssss", $gardener_id, $hire_date_from, $hire_date_from, $hire_date_to, $hire_date_to, $hire_date_from, $hire_date_to);
@@ -35,9 +36,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 $latest_end_date = $row["hire_date_to"];
             }
         }
-
         $next_available_date = date("Y-m-d", strtotime($latest_end_date . ' +1 day'));
-
         echo "<script>
                 alert('Gardener is already booked during the selected period. The next available date is $next_available_date.');
                 window.location.href='/gardeningstore/views/customer/hire_gardener.php?gardener_id=$gardener_id';
@@ -45,7 +44,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         exit;
     }
 
-    $stmt = $conn->prepare("SELECT charges FROM gardeners WHERE gardener_id = ?");
+    // Fetch task-wise charges from gardener's services JSON
+    $stmt = $conn->prepare("SELECT services FROM gardeners WHERE gardener_id = ?");
     $stmt->bind_param("i", $gardener_id);
     $stmt->execute();
     $result = $stmt->get_result();
@@ -55,13 +55,20 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         die("Invalid gardener.");
     }
 
-    $total_amount = $gardener['charges'] * $duration_days;
-    $hire_date = date("Y-m-d");
+    $services = json_decode($gardener['services'], true);
+    if (!isset($services[$task])) {
+        die("Invalid task selected.");
+    }
+
+    $charge_per_day = $services[$task];
+    $total_amount = $charge_per_day * $duration_days;
+
+    // Insert booking into hire table
     $status = "Pending";
     $stmt = $conn->prepare("
-    INSERT INTO hire (customer_id, gardener_id, hire_date_from, hire_date_to, duration_days, total_amount, task, status) 
-    VALUES (?, ?, ?, ?, ?, ?, ?, ?)
-");
+        INSERT INTO hire (customer_id, gardener_id, hire_date_from, hire_date_to, duration_days, total_amount, task, status) 
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+    ");
     $stmt->bind_param("iissdsss", $customer_id, $gardener_id, $hire_date_from, $hire_date_to, $duration_days, $total_amount, $task, $status);
 
     if ($stmt->execute()) {
@@ -73,4 +80,3 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         echo "Error: " . $stmt->error;
     }
 }
-?>

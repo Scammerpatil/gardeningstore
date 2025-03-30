@@ -42,12 +42,11 @@ $result = $conn->query($query);
             $subcategoryClass = strtolower(str_replace([' ', '&'], ['-', 'and'], $row['subcategory']));
             $imageSrc = "data:image/jpeg;base64," . base64_encode($row['image']);
             ?>
-
-            <!-- Product Card -->
-            <div class="card max-w-80 bg-base-100 shadow-xl single_product_item <?= $categoryClass . ' ' . $subcategoryClass; ?>">
-                <figure onclick="window.location.href='product.php?id=<?= $row['product_id']; ?>';" style="cursor:pointer;">
-                    <img src="<?= $imageSrc; ?>" alt="<?= htmlspecialchars($row['name']); ?>"
-                        class="h-48 w-full object-contain bg-blend-overlay" />
+            <div
+                class="card max-w-80 bg-base-300 shadow-xl single_product_item <?= $categoryClass . ' ' . $subcategoryClass; ?>">
+                <figure onclick="window.location.href='product.php?id=<?= $row['product_id']; ?>';" style="cursor:pointer;"
+                    class="h-48">
+                    <img src="<?= $imageSrc; ?>" alt="<?= htmlspecialchars($row['name']); ?>" class="" />
                 </figure>
                 <div class="card-body text-center">
                     <h2 class="card-title justify-center"><?= htmlspecialchars($row['name']); ?></h2>
@@ -56,13 +55,17 @@ $result = $conn->query($query);
                     <h3 class="text-xl font-semibold text-primary">₹<?= number_format($row['price'], 2); ?></h3>
                     <div class="card-actions justify-center">
                         <button class="btn btn-secondary add-to-cart" data-id="<?= $row['product_id']; ?>"
+                            data-category="<?php echo htmlspecialchars($row['category']); ?>"
                             data-name="<?= htmlspecialchars($row['name']); ?>" data-price="<?= $row['price']; ?>"
                             data-image="<?= $imageSrc; ?>">
                             <i class="fa-solid fa-cart-shopping"></i> Add to Cart
                         </button>
-                        <a href="cart.php" class="btn btn-primary">
+                        <button class="btn btn-primary buy_now" data-id="<?= $row['product_id']; ?>"
+                            data-category="<?php echo htmlspecialchars($row['category']); ?>"
+                            data-name="<?= htmlspecialchars($row['name']); ?>" data-price="<?= $row['price']; ?>"
+                            data-image="<?= $imageSrc; ?>" onclick="window.location.href='cart.php';">
                             <i class="fa-solid fa-bag-shopping"></i> Buy Now!
-                        </a>
+                        </button>
                     </div>
                 </div>
             </div>
@@ -92,7 +95,6 @@ $result = $conn->query($query);
                 "Sprayers & Misters", "Hanging Hooks", "Trellises & Supports", "Garden Storage"]
         };
 
-        // Filter function
         function filterProducts(filter) {
             products.forEach(product => {
                 if (filter === "*" || product.classList.contains(filter.replace(".", ""))) {
@@ -103,7 +105,6 @@ $result = $conn->query($query);
             });
         }
 
-        // Filter on button click
         filterButtons.forEach(button => {
             button.addEventListener("click", function () {
                 filterButtons.forEach(btn => btn.classList.remove("btn-primary"));
@@ -135,15 +136,92 @@ $result = $conn->query($query);
 
 <script>
     document.addEventListener("DOMContentLoaded", function () {
+        const cart = JSON.parse(localStorage.getItem("cart")) || [];
+
+        function updateCartCount() {
+            document.getElementById("cart-count").innerText = cart.length;
+        }
+
+        function saveCart() {
+            localStorage.setItem("cart", JSON.stringify(cart));
+            updateCartCount();
+            alert("Cart updated!");
+        }
+
         document.querySelectorAll(".add-to-cart").forEach(button => {
-            button.addEventListener("click", function (event) {
-                event.preventDefault();
-                alert("Item is added to cart!");
+            button.addEventListener("click", function () {
+                const productId = this.getAttribute("data-id");
+                const productName = this.getAttribute("data-name");
+                alert(`${productName} added to cart!`);
+                const productPrice = this.getAttribute("data-price");
+                const productImage = this.getAttribute("data-image");
+                const productCategory = this.getAttribute("data-category");
+
+                const existingItem = cart.find(item => item.id === productId);
+                if (existingItem) {
+                    existingItem.quantity += 1;
+                } else {
+                    cart.push({
+                        id: productId,
+                        name: productName,
+                        price: parseFloat(productPrice),
+                        image: productImage,
+                        category: productCategory,
+                        quantity: 1
+                    });
+                }
+
+                saveCart();
+                console.log(cart);
             });
         });
+
+        updateCartCount();
     });
 </script>
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const cart = JSON.parse(localStorage.getItem("cart")) || [];
 
+        function updateCartCount() {
+            document.getElementById("cart-count").innerText = cart.length;
+        }
+
+        function saveCart() {
+            localStorage.setItem("cart", JSON.stringify(cart));
+            updateCartCount();
+        }
+
+        document.querySelectorAll(".buy_now").forEach(button => {
+            button.addEventListener("click", function () {
+                const productId = this.getAttribute("data-id");
+                const productName = this.getAttribute("data-name");
+                const productPrice = this.getAttribute("data-price");
+                const productImage = this.getAttribute("data-image");
+                const productCategory = this.getAttribute("data-category");
+                const existingItem = cart.find(item => item.id === productId);
+                if (existingItem) {
+                    existingItem.quantity += 1;
+                } else {
+                    cart.push({
+                        id: productId,
+                        name: productName,
+                        price: parseFloat(productPrice),
+                        image: productImage,
+                        category: productCategory,
+                        quantity: 1
+                    });
+                }
+                saveCart();
+                alert(`${productName} added to cart!`);
+                window.location.href = "cart.php";
+            });
+        });
+
+        updateCartCount();
+    });
+
+</script>
 <?php $conn->close(); ?>
 <?php
 $page_content = ob_get_clean();

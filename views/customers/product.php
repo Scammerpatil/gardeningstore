@@ -26,7 +26,8 @@ ob_start();
                 class="max-lg:mx-auto lg:ml-auto h-full object-contain">
         </div>
     </div>
-    <div class="data w-full lg:pr-8 pr-0 xl:justify-start justify-center flex items-center max-lg:pb-10 xl:my-2 lg:my-5 my-0">
+    <div
+        class="data w-full lg:pr-8 pr-0 xl:justify-start justify-center flex items-center max-lg:pb-10 xl:my-2 lg:my-5 my-0">
         <div class="data w-full max-w-xl">
             <p class="text-lg font-medium leading-8 text-primary mb-4">
                 <?= htmlspecialchars($product['category']) ?>&nbsp; /&nbsp;
@@ -36,21 +37,19 @@ ob_start();
                 <?= htmlspecialchars($product['name']) ?>
             </h2>
             <div class="flex flex-col sm:flex-row sm:items-center mb-6">
-                <h6 class="font-manrope font-semibold text-2xl leading-9 text-base-content pr-5 sm:border-r border-base-content/50 mr-5">
+                <h6
+                    class="font-manrope font-semibold text-2xl leading-9 text-base-content pr-5 sm:border-r border-base-content/50 mr-5">
                     ₹<?= htmlspecialchars($product['price']) ?>
                 </h6>
                 <div class="flex items-center gap-2">
-                    <!-- Rating Section Here -->
                     <span class="pl-2 font-normal leading-7 text-base-content text-sm">1624 review</span>
                 </div>
             </div>
             <p class="text-base-content/50 text-base font-normal mb-5">
                 <?= htmlspecialchars($product['shortdesc']) ?>
-                <!-- Add a link to toggle long description -->
                 <a href="#" class="text-primary" id="more-link">More....</a>
             </p>
 
-            <!-- Hidden Long Description (Initially Hidden) -->
             <p id="longdesc" class="text-base-content text-base font-normal mb-5" style="display: none;">
                 <?= htmlspecialchars($product['longdesc']) ?>
             </p>
@@ -69,7 +68,6 @@ ob_start();
     </div>
 </div>
 
-<!-- JavaScript to handle the "More" link toggle -->
 <script>
     document.getElementById('more-link').addEventListener('click', function (event) {
         event.preventDefault();

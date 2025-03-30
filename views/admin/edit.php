@@ -54,6 +54,8 @@ if (!$product) {
                 <option value="Pebble" <?= ($product['category'] == "Pebble") ? "selected" : ""; ?>>Pebble</option>
                 <option value="Accessory" <?= ($product['category'] == "Accessory") ? "selected" : ""; ?>>Accessory
                 </option>
+                <option value="Pots" <?= ($product['category'] == "Pots") ? "selected" : ""; ?>>Pots
+                </option>
             </select>
         </div>
     </div>
@@ -136,7 +138,8 @@ if (!$product) {
         "Bulb": ["Flower Bulbs", "Seasonal Bulbs", "Perennial Bulbs", "Exotic Bulbs", "Indoor Bulbs", "Outdoor Bulbs", "Decorative Bulbs"],
         "Soil & Fertilizer": ["Organic Fertilizer", "Potting Soil", "Coco Peat", "Vermicompost", "Nutrient Mixes", "Soil Amendments", "Specialty Fertilizers"],
         "Pebble": ["Decorative Pebbles", "Natural Stones", "River Rocks", "Colored Pebbles", "Aquarium Pebbles", "Garden Path Pebbles", "Gravel"],
-        "Accessory": ["Plant Stands", "Garden Lighting", "Labels & Markers", "Sprayers & Misters", "Hanging Hooks", "Trellises & Supports", "Garden Storage"]
+        "Accessory": ["Plant Stands", "Garden Lighting", "Labels & Markers", "Sprayers & Misters", "Hanging Hooks", "Trellises & Supports", "Garden Storage"],
+        "Pots": ["Ceramic Pots", "Plastic Pots", "Terracotta Pots", "Hanging Pots", "Self-Watering Pots", "Decorative Pots", "Planters"]
     };
 
     function updateSubcategories() {
