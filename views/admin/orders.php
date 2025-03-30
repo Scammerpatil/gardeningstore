@@ -56,7 +56,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     }
 }
 
-$query = "SELECT o.order_id, c.name AS customer_name, c.address AS address, o.order_date, o.customizing, o.delivery_status, o.total_amount, o.status 
+$query = "SELECT o.order_id, c.name AS customer_name, c.address AS address, o.order_date, o.customizing, o.delivery_status, o.total_amount, o.status, o.payment_status
           FROM orders o 
           JOIN customers c ON o.customer_id = c.customer_id
           ORDER BY o.order_date DESC";
@@ -78,6 +78,7 @@ $result = $conn->query($query);
                     <th class="border px-4 py-2">Customizing</th>
                     <th class="border px-4 py-2">Total Amount</th>
                     <th class="border px-4 py-2">Status</th>
+                    <th class="border px-4 py-2">Payment Status</th>
                     <th class="border px-4 py-2">Delivery Status</th>
                     <th class="border px-4 py-2">Action</th>
                 </tr>
@@ -92,11 +93,14 @@ $result = $conn->query($query);
                         <td class="border px-4 py-2"><?= htmlspecialchars($row["customizing"]) ?></td>
                         <td class="border px-4 py-2">₹<?= number_format($row["total_amount"], 2) ?></td>
 
-                        <!-- Order Status -->
                         <td
                             class="border px-4 py-2 
                             <?= ($row["status"] == 'Completed') ? 'text-green-500' : (($row["status"] == 'Rejected') ? 'text-red-500' : 'text-yellow-500') ?>">
                             <?= $row["status"] ?>
+                        </td>
+
+                        <td class="border px-4 py-2 <?= ($row["payment_status"] == 1) ? 'text-green-500' : 'text-red-500' ?>">
+                            <?= ($row["payment_status"] == 1) ? 'Paid' : 'Unpaid' ?>
                         </td>
 
                         <!-- Delivery Status -->

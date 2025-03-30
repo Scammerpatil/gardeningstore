@@ -18,7 +18,7 @@ ob_start();
             </label>
             <textarea class="textarea textarea-bordered textarea-primary w-full" id="customizing" name="customizing"
                 placeholder="Customize Your Orders" required>
-            </textarea>
+                </textarea>
 
         </div>
     </div>
@@ -73,7 +73,7 @@ ob_start();
                         <button class="btn btn-sm btn-secondary qty-minus" data-index="${index}">-</button>
                         <button class="btn btn-sm btn-error remove-item" data-index="${index}">Remove</button>
                     </div>
-                    ${customizeButton}  <!-- Only show customize button for plants -->
+                    ${customizeButton} 
                 </div>
             `;
 
