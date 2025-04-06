@@ -128,7 +128,7 @@ $result = $stmt->get_result();
                     <th class="border px-4 py-2">Status</th>
                     <th class="border px-4 py-2">Delivery Status</th>
                     <th class="border px-4 py-2">Action</th>
-                    <th class="border px-4 py-2">Payment Status</th>
+                    <!-- <th class="border px-4 py-2">Payment Status</th> -->
                 </tr>
             </thead>
             <tbody>
@@ -151,7 +151,7 @@ $result = $stmt->get_result();
                                 View Details
                             </a>
                         </td>
-                        <td class="border px-4 py-2 <?= ($row["payment_status"] == 1) ? 'text-green-500' : 'text-red-500' ?>">
+                        <!-- <td class="border px-4 py-2 <?= ($row["payment_status"] == 1) ? 'text-green-500' : 'text-red-500' ?>">
                             <?php if ($row["payment_status"] == 1): ?>
                                 Paid
                             <?php else: ?>
@@ -161,7 +161,7 @@ $result = $stmt->get_result();
                                     <button class="btn btn-error" type="submit">Pay Now</button>
                                 </form>
                             <?php endif; ?>
-                        </td>
+                        </td> -->
                     </tr>
                 <?php endwhile; ?>
             </tbody>

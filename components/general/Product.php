@@ -6,8 +6,8 @@ $result = $conn->query($query);
 
 <section class="bg-base-300 py-10">
     <div class="container mx-auto px-4">
-        <h1 class="text-5xl font-bold text-center text-base-content uppercase">GARDENING STORE</h1>
-        <p class="text-xl text-center my-2">Explore our Store</p>
+        <h1 class="text-4xl font-bold text-center text-base-content uppercase">GARDENING STORE</h1>
+        <p class="text-2xl text-center my-2">Explore our Store</p>
 
         <!-- Category Filters -->
         <div class="flex flex-wrap justify-center gap-4 my-6">
@@ -45,7 +45,7 @@ $result = $conn->query($query);
                 <div onclick="window.location.href='product.php?id=<?= htmlspecialchars($row['product_id']); ?>'"
                     class="card w-80 bg-base-100 shadow-xl single_product_item cursor-pointer <?= $categoryClass . ' ' . $subcategoryClass; ?>">
                     <figure class="h-48 w-full object-contain bg-blend-overlay">
-                        <img src="<?= $imageSrc; ?>" alt="<?= htmlspecialchars($row['name']); ?>" />
+                        <img src="<?= $imageSrc; ?>" alt="<?= htmlspecialchars($row['name']); ?>" class="h-48 w-full object-contain"/>
                     </figure>
                     <div class="card-body text-center">
                         <h2 class="card-title justify-center"><?= htmlspecialchars($row['name']); ?></h2>

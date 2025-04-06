@@ -15,8 +15,8 @@ $admin_avatar = "../../img/bg-img/team2.png";
             <img class="h-8 w-auto" src="../../img/core-img/leaf.png" alt="GreenWorld Logo">
             <div class="flex flex-col items-start gap-1">
                 <div class="flex items-baseline gap-[2px]">
-                    <span class="text-primary font-extrabold text-xl">Modern</span>
-                    <span class="text-accent font-semibold text-xl">Nursery</span>
+                    <span class="text-primary font-extrabold text-4xl">Modern</span>
+                    <span class="text-accent font-semibold text-4xl">Nursery</span>
                 </div>
                 <hr class="w-full border border-white" />
                 <span class="text-sm text-white/70 italic">Your one-stop solution for all your gardening needs</span>

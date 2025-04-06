@@ -58,7 +58,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 }
 ?>
 
-<h2 class="text-3xl font-bold text-center uppercase">Accept or Reject Sale Price</h2>
+<h2 class="text-2xl font-bold text-center uppercase">Accept or Reject Sale Price</h2>
 <div class="overflow-x-auto mt-6">
     <table class="table-auto w-full border-collapse border border-base-content">
         <thead>

@@ -8,7 +8,7 @@ $query = "SELECT product_id, name, category, subcategory, price, shortdesc, long
 $result = $conn->query($query);
 ?>
 <div class="container mx-auto px-4">
-    <h1 class="text-5xl font-bold text-center text-base-content uppercase">GARDENING STORE</h1>
+    <h1 class="text-4xl font-bold text-center text-base-content uppercase">GARDENING STORE</h1>
     <p class="text-xl text-center my-2">Explore our Store</p>
 
     <!-- Category Filters -->
@@ -44,14 +44,13 @@ $result = $conn->query($query);
             ?>
             <div
                 class="card max-w-80 bg-base-300 shadow-xl single_product_item <?= $categoryClass . ' ' . $subcategoryClass; ?>">
-                <figure onclick="window.location.href='product.php?id=<?= $row['product_id']; ?>';" style="cursor:pointer;"
-                    class="h-48">
-                    <img src="<?= $imageSrc; ?>" alt="<?= htmlspecialchars($row['name']); ?>" class="" />
+                <figure onclick="window.location.href='product.php?id=<?= $row['product_id']; ?>';" style="cursor:pointer;">
+                    <img src="<?= $imageSrc; ?>" alt="<?= htmlspecialchars($row['name']); ?>" class="h-48 w-full object-contain" />
                 </figure>
                 <div class="card-body text-center">
                     <h2 class="card-title justify-center"><?= htmlspecialchars($row['name']); ?></h2>
                     <p><?= htmlspecialchars($row['shortdesc']); ?></p>
-                    <p><?= htmlspecialchars($row['longdesc']); ?></p>
+                    <!-- <p><?= htmlspecialchars($row['longdesc']); ?></p> -->
                     <h3 class="text-xl font-semibold text-primary">₹<?= number_format($row['price'], 2); ?></h3>
                     <div class="card-actions justify-center">
                         <button class="btn btn-secondary add-to-cart" data-id="<?= $row['product_id']; ?>"

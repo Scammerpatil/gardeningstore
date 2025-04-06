@@ -47,8 +47,7 @@ $imageSrc = "data:image/jpeg;base64," . base64_encode($product['image']);
                                 class="font-manrope font-semibold text-2xl leading-9 text-base-content pr-5 sm:border-r border-base-content/50 mr-5">
                                 ₹<?= htmlspecialchars($product['price']) ?></h6>
                             <div class="flex items-center gap-2">
-                                <!-- Rating Section Here -->
-                                <span class="pl-2 font-normal leading-7 text-base-content text-sm ">1624 review</span>
+                                
                             </div>
                         </div>
                         <p class="text-base-content/50 text-base font-normal mb-5">

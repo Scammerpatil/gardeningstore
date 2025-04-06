@@ -11,6 +11,7 @@ $page_title = "Manage Orders";
 ob_start();
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    // Handling order status updates (accept/reject)
     if (isset($_POST["order_id"]) && isset($_POST["action"])) {
         $order_id = intval($_POST["order_id"]);
         $action = $_POST["action"];
@@ -78,7 +79,7 @@ $result = $conn->query($query);
                     <th class="border px-4 py-2">Customizing</th>
                     <th class="border px-4 py-2">Total Amount</th>
                     <th class="border px-4 py-2">Status</th>
-                    <th class="border px-4 py-2">Payment Status</th>
+                    <!-- <th class="border px-4 py-2">Payment Status</th> -->
                     <th class="border px-4 py-2">Delivery Status</th>
                     <th class="border px-4 py-2">Action</th>
                 </tr>
@@ -90,18 +91,24 @@ $result = $conn->query($query);
                         <td class="border px-4 py-2"><?= htmlspecialchars($row["customer_name"]) ?></td>
                         <td class="border px-4 py-2"><?= htmlspecialchars($row["address"]) ?></td>
                         <td class="border px-4 py-2"><?= $row["order_date"] ?></td>
-                        <td class="border px-4 py-2"><?= htmlspecialchars($row["customizing"]) ?></td>
+                        <!-- Display a simple indicator if this order has customization details -->
+                        <td class="border px-4 py-2">
+                            <?php if (!empty($row["customizing"])): ?>
+                                <span class="text-orange-600 font-bold">Custom Item</span>
+                            <?php else: ?>
+                                None
+                            <?php endif; ?>
+                        </td>
                         <td class="border px-4 py-2">₹<?= number_format($row["total_amount"], 2) ?></td>
 
-                        <td
-                            class="border px-4 py-2 
+                        <td class="border px-4 py-2 
                             <?= ($row["status"] == 'Completed') ? 'text-green-500' : (($row["status"] == 'Rejected') ? 'text-red-500' : 'text-yellow-500') ?>">
                             <?= $row["status"] ?>
                         </td>
 
-                        <td class="border px-4 py-2 <?= ($row["payment_status"] == 1) ? 'text-green-500' : 'text-red-500' ?>">
+                        <!-- <td class="border px-4 py-2 <?= ($row["payment_status"] == 1) ? 'text-green-500' : 'text-red-500' ?>">
                             <?= ($row["payment_status"] == 1) ? 'Paid' : 'Unpaid' ?>
-                        </td>
+                        </td> -->
 
                         <!-- Delivery Status -->
                         <td class="border px-4 py-2">
@@ -114,13 +121,10 @@ $result = $conn->query($query);
                                     <form action="orders.php" method="POST">
                                         <input type="hidden" name="order_id" value="<?= $row["order_id"] ?>">
                                         <select name="delivery_status" class="select select-bordered">
-                                            <option value="Pending" <?= ($row["delivery_status"] == "Pending") ? "selected" : "" ?>>Pending
-                                            </option>
-                                            <option value="Dispatched" <?= ($row["delivery_status"] == "Dispatched") ? "selected" : "" ?>>
-                                                Dispatched</option>
+                                            <option value="Pending" <?= ($row["delivery_status"] == "Pending") ? "selected" : "" ?>>Pending</option>
+                                            <option value="Dispatched" <?= ($row["delivery_status"] == "Dispatched") ? "selected" : "" ?>>Dispatched</option>
                                             <option value="Out for Delivery" <?= ($row["delivery_status"] == "Out for Delivery") ? "selected" : "" ?>>Out for Delivery</option>
-                                            <option value="Delivered" <?= ($row["delivery_status"] == "Delivered") ? "selected" : "" ?>>
-                                                Delivered</option>
+                                            <option value="Delivered" <?= ($row["delivery_status"] == "Delivered") ? "selected" : "" ?>>Delivered</option>
                                         </select>
                                         <button type="submit" class="btn btn-sm btn-primary">Update</button>
                                     </form>
@@ -133,13 +137,12 @@ $result = $conn->query($query);
                             <?php if ($row["status"] == "Pending"): ?>
                                 <form action="orders.php" method="POST">
                                     <input type="hidden" name="order_id" value="<?= $row["order_id"] ?>">
-                                    <button type="submit" name="action" value="accept"
-                                        class="btn btn-success btn-sm">Accept</button>
+                                    <button type="submit" name="action" value="accept" class="btn btn-success btn-sm">Accept</button>
                                     <button type="submit" name="action" value="reject" class="btn btn-danger btn-sm">Reject</button>
                                 </form>
                             <?php endif; ?>
-                            <a href="order_details.php?order_id=<?= $row["order_id"] ?>" class="btn btn-primary btn-sm">View
-                                Details</a>
+                            <!-- The View Details link now goes to order_details.php -->
+                            <a href="order_details.php?order_id=<?= $row["order_id"] ?>" class="btn btn-primary btn-sm">View Details</a>
                         </td>
                     </tr>
                 <?php endwhile; ?>

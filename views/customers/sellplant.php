@@ -23,7 +23,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
     // Prepare the SQL query to insert the plant listing and image
     $stmt = $conn->prepare("INSERT INTO plant_sales (user_id, plant_name, category, quantity, image, status) VALUES (?, ?, ?, ?, ?, 'Pending')");
-    $stmt->bind_param("issis", $user_id, $plant_name, $category, $quantity, $image); // 'i' for integer, 's' for string, 'b' for blob
+    $stmt->bind_param("issis", $user_id, $plant_name, $category, $quantity, $image);
 
     // Execute the query
     if ($stmt->execute()) {

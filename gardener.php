@@ -1,50 +1,121 @@
-<!DOCTYPE html>
-<html lang="en" data-theme="lemonade">
-<?php include './components/general/Header.php' ?>
-<?php include './server/database.php' ?>
 <?php
-$query = "SELECT gardener_id, name, email, phone_no, charges FROM gardeners";
-$result = $conn->query($query);
+session_start();
+$page_title = "Hire a Gardener";
+include "../../server/database.php";
+ob_start();
+
+// Function to get the average rating
+function getAverageRating($gardener_id, $conn) {
+    $query = "SELECT AVG(rating) as avg_rating FROM ratings WHERE gardener_id = ?";
+    $stmt = $conn->prepare($query);
+    $stmt->bind_param("i", $gardener_id);
+    $stmt->execute();
+    $result = $stmt->get_result()->fetch_assoc();
+    return round($result['avg_rating'], 1);
+}
+
 ?>
 
-<body style="font-family: Dosis, sans-serif;">
-    <?php include './components/general/Navbar.php' ?>
-    <?php include './components/general/Hero.php' ?>
-    <section class="bg-base-300 py-10">
-        <div class="container mx-auto px-4">
-            <h1 class="text-5xl font-bold text-center text-base-content uppercase">GARDENER</h1>
-            <p class="text-xl text-center my-2">Our Hard Working Gardener</p>
-            <!-- Product Grid -->
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 p-5">
-                <?php while ($row = $result->fetch_assoc()): ?>
-                    <?php
-                    $name = htmlspecialchars($row['name']);
-                    $email = htmlspecialchars($row['email']);
-                    $phone_no = !empty($row['phone_no']) ? htmlspecialchars($row['phone_no']) : "Not Provided";
-                    $charges = !empty($row['charges']) ? "₹" . number_format($row['charges'], 2) . "/hour" : "Contact for Pricing";
-                    $imageSrc = "https://avatar.iran.liara.run/public/" . number_format($row['gardener_id']);
-                    ?>
+<h2 class="text-3xl font-bold text-center uppercase">Available Gardeners</h2>
+<div class="overflow-x-auto mt-6">
+    <table class="table-auto w-full border-collapse border border-base-content">
+        <thead>
+            <tr class="bg-base-200">
+                <th class="border px-4 py-2">Name</th>
+                <th class="border px-4 py-2">Email</th>
+                <th class="border px-4 py-2">Phone</th>
+                <th class="border px-4 py-2">Rating</th> <!-- Rating Column -->
 
-                    <!-- Gardener Card -->
-                    <div class="card w-80 bg-base-100 shadow-xl">
-                        <figure><img src="<?php echo $imageSrc; ?>" alt="<?= $name; ?>"
-                                class="h-48 w-full object-contain" />
-                        </figure>
-                        <div class="card-body text-center">
-                            <h2 class="card-title justify-center text-lg font-bold"><?= $name; ?></h2>
-                            <p><span class="font-semibold text-lg">Charges:</span> <?= $charges; ?></p>
-                            <p><span class="font-semibold text-lg">Phone:</span> <?= $phone_no; ?></p>
-                            <div class="card-actions justify-center">
-                                <a href="mailto:<?= $email; ?>" class="btn btn-secondary"><i
-                                        class="fa-solid fa-envelope"></i> Contact</a>
-                                <a href="login.php" class="btn btn-primary"><i class="fa-solid fa-user-tie"></i> Hire</a>
-                            </div>
-                        </div>
-                    </div>
-                <?php endwhile; ?>
-            </div>
-        </div>
-    </section>
-</body>
+                <?php
+                $query = "SELECT services FROM gardeners LIMIT 1";
+                $result = $conn->query($query);
+                $service_keys = [];
 
-</html>
+                if ($result->num_rows > 0) {
+                    $row = $result->fetch_assoc();
+                    $service_keys = array_keys(json_decode($row['services'], true));
+
+                    foreach ($service_keys as $service) {
+                        echo "<th class='border px-4 py-2'>$service (Per Day)</th>";
+                    }
+                }
+                ?>
+
+                <th class="border px-4 py-2">Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            <?php
+            $query = "SELECT gardener_id, name, email, phone_no, services FROM gardeners";
+            $result = $conn->query($query);
+
+            if ($result->num_rows > 0) {
+                while ($row = $result->fetch_assoc()) {
+                    $services = json_decode($row['services'], true);
+                    $rating = getAverageRating($row['gardener_id'], $conn);
+
+                    echo "<tr class='border px-4 py-2 text-center'>";
+                    echo "<td class='border px-4 py-2'>" . htmlspecialchars($row['name']) . "</td>";
+                    echo "<td class='border px-4 py-2'>" . htmlspecialchars($row['email']) . "</td>";
+                    echo "<td class='border px-4 py-2'>" . (!empty($row['phone_no']) ? htmlspecialchars($row['phone_no']) : "Not Provided") . "</td>";
+
+                    // Display rating with stars
+                    echo "<td class='border px-4 py-2'>";
+                    echo "<span class='text-yellow-500'>" . str_repeat("⭐", $rating) . "</span> ($rating)";
+                    echo "<br><select class='rating-dropdown' data-gardener='" . $row['gardener_id'] . "'>
+                            <option value='1'>⭐</option>
+                            <option value='2'>⭐⭐</option>
+                            <option value='3'>⭐⭐⭐</option>
+                            <option value='4'>⭐⭐⭐⭐</option>
+                            <option value='5'>⭐⭐⭐⭐⭐</option>
+                          </select>";
+                    echo "</td>";
+
+                    // Display service charges dynamically
+                    foreach ($service_keys as $service) {
+                        if (isset($services[$service])) {
+                            echo "<td class='border px-4 py-2'>₹" . number_format($services[$service], 2) . "</td>";
+                        } else {
+                            echo "<td class='border px-4 py-2 text-gray-500'>Not Available</td>";
+                        }
+                    }
+
+                    echo "<td class='border px-4 py-2'>
+                            <a href='hire_form.php?gardener_id=" . $row['gardener_id'] . "' class='btn btn-primary'>
+                                Hire
+                            </a>
+                          </td>";
+                    echo "</tr>";
+                }
+            } else {
+                echo "<tr><td colspan='" . (count($service_keys) + 4) . "' class='text-center p-3'>No gardeners available</td></tr>";
+            }
+            ?>
+        </tbody>
+    </table>
+</div>
+
+<script>
+document.querySelectorAll('.rating-dropdown').forEach(dropdown => {
+    dropdown.addEventListener('change', function() {
+        let gardenerId = this.getAttribute('data-gardener');
+        let rating = this.value;
+
+        fetch('rate_gardener.php', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+            body: `gardener_id=${gardenerId}&rating=${rating}`
+        })
+        .then(response => response.text())
+        .then(data => {
+            alert(data);
+            location.reload();
+        });
+    });
+});
+</script>
+
+<?php
+$page_content = ob_get_clean();
+include './components/layout.php';
+?>
