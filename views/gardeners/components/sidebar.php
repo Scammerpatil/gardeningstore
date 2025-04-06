@@ -20,12 +20,16 @@ $current_page = basename($_SERVER['PHP_SELF']);
             <a href="completed_requests.php"><i class="fa-solid fa-check-circle"></i> Completed Jobs</a>
         </li>
 
+        <li class="text-lg <?= ($current_page == 'my_reviews.php') ? 'bg-primary text-white' : ''; ?>">
+            <a href="my_reviews.php"><i class="fa-solid fa-magnifying-glass"></i> My Ratings</a>
+        </li>
+
         <!-- Profile & Settings -->
         <li class="menu-title">Profile Management</li>
         <li class="text-lg <?= ($current_page == 'update_profile.php') ? 'bg-primary text-white' : ''; ?>">
             <a href="update_profile.php"><i class="fa-solid fa-user-edit"></i> Update Profile</a>
         </li>
 
-    
+
     </ul>
 </div>

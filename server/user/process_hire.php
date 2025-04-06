@@ -9,12 +9,14 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $hire_date_from = $_POST['hire_date_from'];
     $hire_date_to = $_POST['hire_date_to'];
     $task = $_POST['task'];
+    $total_amount = $_POST['total_amount'];
+    $total_amount = str_replace("₹", "", $total_amount);
+    $task = is_array($task) ? implode(", ", $task) : $task;
 
-    if (empty($customer_id) || empty($gardener_id) || empty($hire_date_from) || empty($hire_date_to) || empty($duration_days) || empty($task)) {
+    if (empty($customer_id) || empty($gardener_id) || empty($hire_date_from) || empty($hire_date_to) || empty($duration_days) || empty($task) || empty($total_amount)) {
         die("All fields are required.");
     }
 
-    // Check if the gardener is already booked during the selected period
     $stmt = $conn->prepare("
         SELECT hire_date_from, hire_date_to 
         FROM hire 
@@ -44,7 +46,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         exit;
     }
 
-    // Fetch task-wise charges from gardener's services JSON
     $stmt = $conn->prepare("SELECT services FROM gardeners WHERE gardener_id = ?");
     $stmt->bind_param("i", $gardener_id);
     $stmt->execute();
@@ -55,15 +56,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         die("Invalid gardener.");
     }
 
-    $services = json_decode($gardener['services'], true);
-    if (!isset($services[$task])) {
-        die("Invalid task selected.");
-    }
-
-    $charge_per_day = $services[$task];
-    $total_amount = $charge_per_day * $duration_days;
-
-    // Insert booking into hire table
     $status = "Pending";
     $stmt = $conn->prepare("
         INSERT INTO hire (customer_id, gardener_id, hire_date_from, hire_date_to, duration_days, total_amount, task, status) 

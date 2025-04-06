@@ -1,12 +1,13 @@
-<?php
-session_start();
-$page_title = "Hire a Gardener";
-include "../../server/database.php";
-ob_start();
+<!DOCTYPE html>
+<html lang="en" data-theme="lemonade">
+<?php include './components/general/Header.php' ?>
 
-// Function to get the average rating
-function getAverageRating($gardener_id, $conn) {
-    $query = "SELECT AVG(rating) as avg_rating FROM ratings WHERE gardener_id = ?";
+<?php
+include "./server/database.php";
+
+function getAverageRating($gardener_id, $conn)
+{
+    $query = "SELECT AVG(rating) as avg_rating FROM gardener_ratings WHERE gardener_id = ?";
     $stmt = $conn->prepare($query);
     $stmt->bind_param("i", $gardener_id);
     $stmt->execute();
@@ -14,108 +15,59 @@ function getAverageRating($gardener_id, $conn) {
     return round($result['avg_rating'], 1);
 }
 
+$query = "SELECT gardener_id, name, email, phone_no, services FROM gardeners";
+$result = $conn->query($query);
 ?>
 
-<h2 class="text-3xl font-bold text-center uppercase">Available Gardeners</h2>
-<div class="overflow-x-auto mt-6">
-    <table class="table-auto w-full border-collapse border border-base-content">
-        <thead>
-            <tr class="bg-base-200">
-                <th class="border px-4 py-2">Name</th>
-                <th class="border px-4 py-2">Email</th>
-                <th class="border px-4 py-2">Phone</th>
-                <th class="border px-4 py-2">Rating</th> <!-- Rating Column -->
+<body style="font-family: Dosis, sans-serif;">
+    <?php include './components/general/Navbar.php' ?>
+    <?php include './components/general/Hero.php' ?>
 
-                <?php
-                $query = "SELECT services FROM gardeners LIMIT 1";
-                $result = $conn->query($query);
-                $service_keys = [];
+    <div class="container mx-auto px-4 py-8">
+        <h1 class="text-4xl font-bold text-center">Hire a Gardener</h1>
+        <p class="text-center mt-4">Find the best gardeners available for your needs.</p>
 
-                if ($result->num_rows > 0) {
-                    $row = $result->fetch_assoc();
-                    $service_keys = array_keys(json_decode($row['services'], true));
-
-                    foreach ($service_keys as $service) {
-                        echo "<th class='border px-4 py-2'>$service (Per Day)</th>";
-                    }
-                }
-                ?>
-
-                <th class="border px-4 py-2">Action</th>
-            </tr>
-        </thead>
-        <tbody>
-            <?php
-            $query = "SELECT gardener_id, name, email, phone_no, services FROM gardeners";
-            $result = $conn->query($query);
-
-            if ($result->num_rows > 0) {
-                while ($row = $result->fetch_assoc()) {
+        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 mt-10 px-10">
+            <?php if ($result->num_rows > 0): ?>
+                <?php while ($row = $result->fetch_assoc()): ?>
+                    <?php
                     $services = json_decode($row['services'], true);
                     $rating = getAverageRating($row['gardener_id'], $conn);
+                    ?>
+                    <div class="card shadow-xl bg-base-300">
+                        <div class="card-body">
+                            <h2 class="card-title text-xl text-primary"><?= htmlspecialchars($row['name']) ?></h2>
+                            <p><strong>Email:</strong> <?= htmlspecialchars($row['email']) ?></p>
+                            <p><strong>Phone:</strong>
+                                <?= !empty($row['phone_no']) ? htmlspecialchars($row['phone_no']) : 'Not Provided' ?></p>
 
-                    echo "<tr class='border px-4 py-2 text-center'>";
-                    echo "<td class='border px-4 py-2'>" . htmlspecialchars($row['name']) . "</td>";
-                    echo "<td class='border px-4 py-2'>" . htmlspecialchars($row['email']) . "</td>";
-                    echo "<td class='border px-4 py-2'>" . (!empty($row['phone_no']) ? htmlspecialchars($row['phone_no']) : "Not Provided") . "</td>";
+                            <div class="mt-2">
+                                <span class="text-yellow-500 text-lg">
+                                    <?= str_repeat('⭐', floor($rating)) ?>
+                                </span>
+                                <span class="text-sm text-gray-600 ml-2">(<?= $rating ?>)</span>
+                            </div>
 
-                    // Display rating with stars
-                    echo "<td class='border px-4 py-2'>";
-                    echo "<span class='text-yellow-500'>" . str_repeat("⭐", $rating) . "</span> ($rating)";
-                    echo "<br><select class='rating-dropdown' data-gardener='" . $row['gardener_id'] . "'>
-                            <option value='1'>⭐</option>
-                            <option value='2'>⭐⭐</option>
-                            <option value='3'>⭐⭐⭐</option>
-                            <option value='4'>⭐⭐⭐⭐</option>
-                            <option value='5'>⭐⭐⭐⭐⭐</option>
-                          </select>";
-                    echo "</td>";
+                            <div class="mt-4">
+                                <h3 class="font-bold">Services</h3>
+                                <ul class="list-disc list-inside text-sm">
+                                    <?php foreach ($services as $service => $price): ?>
+                                        <li><?= htmlspecialchars($service) ?>: ₹<?= number_format($price, 2) ?> / day</li>
+                                    <?php endforeach; ?>
+                                </ul>
+                            </div>
 
-                    // Display service charges dynamically
-                    foreach ($service_keys as $service) {
-                        if (isset($services[$service])) {
-                            echo "<td class='border px-4 py-2'>₹" . number_format($services[$service], 2) . "</td>";
-                        } else {
-                            echo "<td class='border px-4 py-2 text-gray-500'>Not Available</td>";
-                        }
-                    }
+                            <div class="card-actions mt-4">
+                                <a href="login.php" class="btn btn-primary btn-block">Hire</a>
+                            </div>
+                        </div>
+                    </div>
+                <?php endwhile; ?>
+            <?php else: ?>
+                <p class="col-span-full text-center text-lg text-base-content/80">No gardeners available at the moment.</p>
+            <?php endif; ?>
+        </div>
+    </div>
+</body>
 
-                    echo "<td class='border px-4 py-2'>
-                            <a href='hire_form.php?gardener_id=" . $row['gardener_id'] . "' class='btn btn-primary'>
-                                Hire
-                            </a>
-                          </td>";
-                    echo "</tr>";
-                }
-            } else {
-                echo "<tr><td colspan='" . (count($service_keys) + 4) . "' class='text-center p-3'>No gardeners available</td></tr>";
-            }
-            ?>
-        </tbody>
-    </table>
-</div>
-
-<script>
-document.querySelectorAll('.rating-dropdown').forEach(dropdown => {
-    dropdown.addEventListener('change', function() {
-        let gardenerId = this.getAttribute('data-gardener');
-        let rating = this.value;
-
-        fetch('rate_gardener.php', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-            body: `gardener_id=${gardenerId}&rating=${rating}`
-        })
-        .then(response => response.text())
-        .then(data => {
-            alert(data);
-            location.reload();
-        });
-    });
-});
-</script>
-
-<?php
-$page_content = ob_get_clean();
-include './components/layout.php';
-?>
+</html>

@@ -18,6 +18,9 @@ $user_type = $_SESSION['user_type'] ?? 'customer';
         <li class="text-lg <?= ($current_page == 'hire_gardener.php') ? 'bg-primary text-white' : ''; ?>">
             <a href="hire_gardener.php"><i class="fa-solid fa-user-tie"></i> Hire a Gardener</a>
         </li>
+        <li class="text-lg <?= ($current_page == 'hire_gardener_status.php') ? 'bg-primary text-white' : ''; ?>">
+            <a href="hire_gardener_status.php"><i class="fa-solid fa-user-tie"></i> Hire Gardener Status</a>
+        </li>
         <li class="text-lg <?= ($current_page == 'sellplant.php') ? 'bg-primary text-white' : ''; ?>">
             <a href="sellplant.php"><i class="fa-solid fa-seedling"></i> Sell Plant</a>
         </li>
@@ -29,6 +32,6 @@ $user_type = $_SESSION['user_type'] ?? 'customer';
         <li class="text-lg <?= ($current_page == 'profile.php') ? 'bg-primary text-white' : ''; ?>">
             <a href="profile.php"><i class="fa-solid fa-user"></i> Profile</a>
         </li>
-       
+
     </ul>
 </div>

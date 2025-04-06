@@ -34,7 +34,6 @@ ob_start();
     <form action="../../server/user/process_hire.php" method="POST" class="space-y-4 flex flex-col w-full">
         <input type="hidden" name="customer_id" value="<?= $customer_id; ?>">
         <input type="hidden" name="gardener_id" value="<?= $gardener_id; ?>">
-        <input type="hidden" id="serviceCharges" value='<?= json_encode($services); ?>'>
 
         <label class="form-control w-full font-bold">
             <div class="label"><span class="text-base">Gardener Name:</span></div>
@@ -43,20 +42,16 @@ ob_start();
         </label>
 
         <label class="form-control w-full font-bold">
-            <div class="label"><span class="text-base">Select Task:</span></div>
-            <select id="taskSelect" name="task" class="select select-bordered w-full" required>
-                <option value="">Select Task</option>
+            <div class="label"><span class="text-base">Select Tasks:</span></div>
+            <div class="grid grid-cols-1 gap-2">
                 <?php foreach ($services as $task => $charge): ?>
-                    <option value="<?= htmlspecialchars($task); ?>" data-charge="<?= $charge; ?>">
-                        <?= htmlspecialchars($task); ?> (₹<?= number_format($charge, 2); ?>/day)
-                    </option>
+                    <label class="flex items-center gap-2">
+                        <input type="checkbox" class="task-checkbox checkbox checkbox-primary" name="task[]"
+                            value="<?= htmlspecialchars($task); ?>" data-charge="<?= $charge; ?>">
+                        <span><?= htmlspecialchars($task); ?> (₹<?= number_format($charge, 2); ?>/day)</span>
+                    </label>
                 <?php endforeach; ?>
-            </select>
-        </label>
-
-        <label class="form-control w-full font-bold">
-            <div class="label"><span class="text-base">Charges Per Day:</span></div>
-            <input type="text" id="chargesPerDay" class="input input-bordered w-full" disabled>
+            </div>
         </label>
 
         <label class="form-control w-full font-bold">
@@ -77,7 +72,7 @@ ob_start();
 
         <label class="form-control w-full font-bold">
             <div class="label"><span class="text-base">Total Amount:</span></div>
-            <input type="text" id="totalAmount" class="input input-bordered w-full" readonly>
+            <input type="text" id="totalAmount" name="total_amount" class="input input-bordered w-full" readonly>
         </label>
 
         <div class="text-center">
@@ -88,54 +83,47 @@ ob_start();
 
 <script>
     document.addEventListener("DOMContentLoaded", function () {
-        let hireFrom = document.getElementById("hireFrom");
-        let hireTo = document.getElementById("hireTo");
-        let durationDays = document.getElementById("durationDays");
-        let totalAmount = document.getElementById("totalAmount");
-        let chargesPerDay = document.getElementById("chargesPerDay");
-        let taskSelect = document.getElementById("taskSelect");
-        let confirmButton = document.getElementById("confirmButton");
+        const hireFrom = document.getElementById("hireFrom");
+        const hireTo = document.getElementById("hireTo");
+        const durationDays = document.getElementById("durationDays");
+        const totalAmount = document.getElementById("totalAmount");
+        const confirmButton = document.getElementById("confirmButton");
+        const checkboxes = document.querySelectorAll(".task-checkbox");
 
-        let today = new Date().toISOString().split("T")[0];
+        const today = new Date().toISOString().split("T")[0];
         hireFrom.setAttribute("min", today);
         hireTo.setAttribute("min", today);
 
-        function updateTotalAmount() {
-            let fromDate = new Date(hireFrom.value);
-            let toDate = new Date(hireTo.value);
-            let selectedTask = taskSelect.value;
-            let chargePerDay = parseFloat(taskSelect.options[taskSelect.selectedIndex].getAttribute("data-charge"));
+        function calculateCharges() {
+            const fromDate = new Date(hireFrom.value);
+            const toDate = new Date(hireTo.value);
 
-            if (fromDate && toDate && toDate >= fromDate && !isNaN(chargePerDay)) {
-                let duration = Math.ceil((toDate - fromDate) / (1000 * 60 * 60 * 24)) + 1;
+            let totalPerDay = 0;
+
+            checkboxes.forEach(cb => {
+                if (cb.checked) {
+                    totalPerDay += parseFloat(cb.getAttribute("data-charge"));
+                }
+            });
+
+            if (fromDate && toDate && toDate >= fromDate && totalPerDay > 0) {
+                const duration = Math.ceil((toDate - fromDate) / (1000 * 60 * 60 * 24)) + 1;
                 durationDays.value = duration;
-                totalAmount.value = "₹" + (duration * chargePerDay).toFixed(2);
+                totalAmount.value = "₹" + (totalPerDay * duration).toFixed(2);
                 confirmButton.removeAttribute("disabled");
             } else {
                 durationDays.value = "";
                 totalAmount.value = "";
-                confirmButton.setAttribute("disabled", "true");
+                confirmButton.setAttribute("disabled", true);
             }
         }
 
-        taskSelect.addEventListener("change", function () {
-            let selectedTask = taskSelect.value;
-            let chargePerDay = taskSelect.options[taskSelect.selectedIndex].getAttribute("data-charge");
-
-            if (chargePerDay) {
-                chargesPerDay.value = "₹" + parseFloat(chargePerDay).toFixed(2);
-            } else {
-                chargesPerDay.value = "";
-            }
-            updateTotalAmount();
-        });
-
+        checkboxes.forEach(cb => cb.addEventListener("change", calculateCharges));
         hireFrom.addEventListener("change", function () {
             hireTo.setAttribute("min", hireFrom.value);
-            updateTotalAmount();
+            calculateCharges();
         });
-
-        hireTo.addEventListener("change", updateTotalAmount);
+        hireTo.addEventListener("change", calculateCharges);
     });
 </script>
 
