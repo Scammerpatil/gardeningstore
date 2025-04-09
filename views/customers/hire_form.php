@@ -28,59 +28,67 @@ if (!$gardener) {
 $services = json_decode($gardener['services'], true);
 ob_start();
 ?>
+
+
 <h1 class="text-3xl font-bold text-center uppercase">Hire <?= htmlspecialchars($gardener['name']); ?></h1>
 
-<div class="max-w-lg mx-auto bg-base-100 border border-base-content shadow-md rounded px-8 py-6 mt-6">
-    <form action="../../server/user/process_hire.php" method="POST" class="space-y-4 flex flex-col w-full">
-        <input type="hidden" name="customer_id" value="<?= $customer_id; ?>">
-        <input type="hidden" name="gardener_id" value="<?= $gardener_id; ?>">
+<div class="min-h-screen flex items-center justify-center bg-cover bg-center" 
+     style="background-image: url('../../img/bg-img/gardener.jpg');background-size: 1700px 1200px; background-postion:400px 300px; 
+        background-repeat:no-repeat;
+        min-height:125vh;
+        margin:-4px -4px;
+        padding:-6px;
+        font-family:sans-serif;">
 
-        <label class="form-control w-full font-bold">
-            <div class="label"><span class="text-base">Gardener Name:</span></div>
-            <input type="text" value="<?= htmlspecialchars($gardener['name']); ?>" class="input input-bordered w-full"
-                disabled>
-        </label>
+     
+    <div class="bg-white bg-opacity-30 p-8 rounded shadow-lg w-full max-w-lg border border-base-content">
+        <form action="../../server/user/process_hire.php" method="POST" class="space-y-2 flex flex-col w-full">
+            <input type="hidden" name="customer_id" value="<?= $customer_id; ?>">
+            <input type="hidden" name="gardener_id" value="<?= $gardener_id; ?>">
 
-        <label class="form-control w-full font-bold">
-            <div class="label"><span class="text-base">Select Tasks:</span></div>
-            <div class="grid grid-cols-1 gap-2">
-                <?php foreach ($services as $task => $charge): ?>
-                    <label class="flex items-center gap-2">
-                        <input type="checkbox" class="task-checkbox checkbox checkbox-primary" name="task[]"
-                            value="<?= htmlspecialchars($task); ?>" data-charge="<?= $charge; ?>">
-                        <span><?= htmlspecialchars($task); ?> (₹<?= number_format($charge, 2); ?>/day)</span>
-                    </label>
-                <?php endforeach; ?>
+            <label class="form-control w-full font-bold">
+                <div class="label"><span class="text-base">Gardener Name:</span></div>
+                <input type="text" value="<?= htmlspecialchars($gardener['name']); ?>" class="input input-bordered w-full" disabled>
+            </label>
+
+            <label class="form-control w-full font-bold">
+                <div class="label"><span class="text-base">Select Tasks:</span></div>
+                <div class="grid grid-cols-1 gap-2">
+                    <?php foreach ($services as $task => $charge): ?>
+                        <label class="flex items-center gap-2">
+                            <input type="checkbox" class="task-checkbox checkbox checkbox-primary" name="task[]" value="<?= htmlspecialchars($task); ?>" data-charge="<?= $charge; ?>">
+                            <span><?= htmlspecialchars($task); ?> (₹<?= number_format($charge, 2); ?>/day)</span>
+                        </label>
+                    <?php endforeach; ?>
+                </div>
+            </label>
+
+            <label class="form-control w-full font-bold">
+                <div class="label"><span class="text-base">Hire From:</span></div>
+                <input type="date" id="hireFrom" name="hire_date_from" class="input input-bordered w-full" required>
+            </label>
+
+            <label class="form-control w-full font-bold">
+                <div class="label"><span class="text-base">Hire Upto:</span></div>
+                <input type="date" id="hireTo" name="hire_date_to" class="input input-bordered w-full" required>
+            </label>
+
+            <label class="form-control w-full font-bold">
+                <div class="label"><span class="text-base">Duration (Days):</span></div>
+                <input type="number" id="durationDays" name="duration_days" class="input input-bordered w-full" min="1" readonly required>
+            </label>
+
+            <label class="form-control w-full font-bold">
+                <div class="label"><span class="text-base">Total Amount:</span></div>
+                <input type="text" id="totalAmount" name="total_amount" class="input input-bordered w-full" readonly>
+            </label>
+
+            <div class="text-center">
+                <button type="submit" class="btn btn-primary w-full" disabled id="confirmButton">Confirm Hiring</button>
             </div>
-        </label>
-
-        <label class="form-control w-full font-bold">
-            <div class="label"><span class="text-base">Hire From:</span></div>
-            <input type="date" id="hireFrom" name="hire_date_from" class="input input-bordered w-full" required>
-        </label>
-
-        <label class="form-control w-full font-bold">
-            <div class="label"><span class="text-base">Hire Upto:</span></div>
-            <input type="date" id="hireTo" name="hire_date_to" class="input input-bordered w-full" required>
-        </label>
-
-        <label class="form-control w-full font-bold">
-            <div class="label"><span class="text-base">Duration (Days):</span></div>
-            <input type="number" id="durationDays" name="duration_days" class="input input-bordered w-full" min="1"
-                readonly required>
-        </label>
-
-        <label class="form-control w-full font-bold">
-            <div class="label"><span class="text-base">Total Amount:</span></div>
-            <input type="text" id="totalAmount" name="total_amount" class="input input-bordered w-full" readonly>
-        </label>
-
-        <div class="text-center">
-            <button type="submit" class="btn btn-primary w-full" disabled id="confirmButton">Confirm Hiring</button>
-        </div>
-    </form>
+        </form>
+    </div>
 </div>
-
 <script>
     document.addEventListener("DOMContentLoaded", function () {
         const hireFrom = document.getElementById("hireFrom");
@@ -99,7 +107,6 @@ ob_start();
             const toDate = new Date(hireTo.value);
 
             let totalPerDay = 0;
-
             checkboxes.forEach(cb => {
                 if (cb.checked) {
                     totalPerDay += parseFloat(cb.getAttribute("data-charge"));

@@ -19,8 +19,31 @@ if (!$user) {
 }
 ob_start();
 ?>
-<h1 class="text-4xl font-bold text-center">Update Profile</h1>
-<div class="max-w-lg mx-auto mt-6 p-6 bg-base-100 border border-base-content rounded-lg">
+
+<!-- Background Styling -->
+<style>
+    body {
+        background-image: url('../../img/bg-img/nature.jpg');background-size: cover;
+        background-position: center;
+        background-repeat: no-repeat;
+        min-height: 100vh;
+        margin: 0;
+        padding: 0;
+        font-family: sans-serif;
+    }
+
+    .glass-card {
+        background: rgba(255, 255, 255, 0.8); 
+        backdrop-filter: blur(10px);
+        border-radius: 1rem;
+        padding: 2rem;
+        box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+    }
+</style>
+
+<h1 class="text-4xl font-bold text-center text-black mt-6">Update Profile</h1>
+<div class="max-w-lg mx-auto mt-8 glass-card">
+
     <form method="POST">
         <div class="form-group mb-4">
             <label class="block text-lg font-semibold">Name</label>
