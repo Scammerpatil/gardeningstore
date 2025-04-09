@@ -95,11 +95,16 @@ $admin_avatar = "../../img/bg-img/team2.png";
                     </li>
                     <li class="text-base uppercase text-center"><a
                             href="/gardeningstore/views/customer/profile.php">Profile</a></li>
-                    <li class="text-base uppercase text-center"><a
-                            href="/gardeningstore/server/auth/logout.php">Logout</a>
+                    <li class="text-base uppercase text-center"><button onclick="handleLogout()">LOGOUT</button>
                     </li>
                 </div>
             </ul>
         </div>
     </div>
 </header>
+<script>
+    function handleLogout() {
+        localStorage.removeItem('cart');
+        window.location.href = '/gardeningstore/server/auth/logout.php';
+    }
+</script>

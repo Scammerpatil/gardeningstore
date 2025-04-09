@@ -37,7 +37,6 @@ if ($order_result->num_rows > 0) {
 
 $order_stmt->close();
 
-// Fetch the products in the order
 $query = "SELECT p.name, od.quantity, od.price, p.image
               FROM orderdetails od
               JOIN products p ON od.product_id = p.product_id
@@ -68,15 +67,44 @@ if ($result->num_rows > 0):
     <p class="text-center text-lg mt-6">No items found for this order.</p>
 <?php endif; ?>
 
-<?php if (!empty($customizing)): ?>
-    <!-- Customization Details Section -->
-    <div class="mt-6 p-4 bg-yellow-100 border border-yellow-400 rounded">
-        <h3 class="text-2xl font-semibold">Customization Details</h3>
-        <p class="mt-2"><?= nl2br(htmlspecialchars($customizing)) ?></p>
-    </div>
-<?php else: ?>
-    <p class="text-center text-lg mt-6 text-gray-500">No customization details for this order.</p>
-<?php endif; ?>
+<?php
+if (!empty($customizing)) {
+    $customizing_data = json_decode($customizing, true);
+
+    // If the data was successfully decoded
+    if (json_last_error() === JSON_ERROR_NONE) {
+        ?>
+        <div class="mt-6 p-4 bg-warning border border-warning rounded">
+            <h3 class="text-2xl font-semibold text-warning-content">Customization Details</h3>
+
+            <p class="mt-2"><strong>Instructions:</strong> <?= htmlspecialchars($customizing_data['instructions'] ?? 'NA') ?>
+            </p>
+
+            <p class="mt-2"><strong>Customizations:</strong></p>
+            <ul>
+                <?php if (isset($customizing_data['customizations']['plant'])): ?>
+                    <li><strong>Plant:</strong> <?= htmlspecialchars($customizing_data['customizations']['plant']) ?></li>
+                <?php endif; ?>
+
+                <?php if (isset($customizing_data['customizations']['pot'])): ?>
+                    <li><strong>Pot:</strong> <?= htmlspecialchars($customizing_data['customizations']['pot']) ?></li>
+                <?php endif; ?>
+
+                <?php if (isset($customizing_data['customizations']['pebbles']) && is_array($customizing_data['customizations']['pebbles'])): ?>
+                    <li><strong>Pebbles:</strong>
+                        <?= implode(', ', array_map('htmlspecialchars', $customizing_data['customizations']['pebbles'])) ?></li>
+                <?php endif; ?>
+            </ul>
+        </div>
+        <?php
+    } else {
+        echo '<p class="text-center text-lg mt-6 text-warning-content">Invalid customization data.</p>';
+    }
+} else {
+    echo '<p class="text-center text-lg mt-6 text-warning-content">No customization details for this order.</p>';
+}
+?>
+
 
 <div class="text-center mt-6">
     <a href="orders.php" class="btn btn-secondary">Back to Orders</a>

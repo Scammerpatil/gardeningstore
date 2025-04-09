@@ -17,8 +17,7 @@ ob_start();
                 Customizing Your Order
             </label>
             <textarea class="textarea textarea-bordered textarea-primary w-full" id="customizing" name="customizing"
-                placeholder="Customize Your Orders" required>
-                </textarea>
+                placeholder="Customize Your Orders" required></textarea>
 
         </div>
     </div>
@@ -38,6 +37,8 @@ ob_start();
         const totalAmountElement = document.getElementById("total-amount");
         const clearCartButton = document.getElementById("clear_cart");
         let cart = JSON.parse(localStorage.getItem("cart")) || [];
+        console.log(cart);
+        const customizing = document.getElementById("customizing");
         const place_order = document.getElementById("placeOrder");
 
         function updateCartDisplay() {
@@ -62,7 +63,7 @@ ob_start();
                     customizeButton = `<button class="btn btn-sm btn-info customize-btn" data-index="${index}">Want to customize?</button>`;
                 }
 
-                cartItem.innerHTML = `
+                cartItem.innerHTML = ` 
                 <figure><img src="${item.image}" class="h-48 w-full object-contain"></figure>
                 <div class="card-body text-center">
                     <h3 class="card-title">${item.name}</h3>
@@ -115,6 +116,8 @@ ob_start();
         clearCartButton.addEventListener("click", function () {
             if (confirm("Are you sure you want to clear your cart?")) {
                 localStorage.removeItem("cart");
+                localStorage.removeItem("customize");
+                window.location.href = "cart.php";
                 cart = [];
                 updateCartDisplay();
             }
@@ -130,20 +133,33 @@ ob_start();
                 return;
             }
 
+            // Get the customization data from localStorage
+            const customizeData = JSON.parse(localStorage.getItem("customize")) || {};
+
+            // Get the custom instructions from the textarea
+            const customizing = document.getElementById("customizing").value;
+            if (customizing) {
+                customizeData.customizing = customizing;
+            } else {
+                alert("Please provide customization instructions.");
+                return;
+            }
             const orderData = {
                 cart: cart,
+                customizing: customizing,
+                customizeData: customizeData,
             };
-
             fetch("../../server/user/place_order.php", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
-                body: JSON.stringify(orderData)
+                body: JSON.stringify(orderData),
             })
                 .then(response => response.json())
                 .then(data => {
                     if (data.success) {
                         alert(data.success);
                         localStorage.removeItem("cart");
+                        localStorage.removeItem("customize");
                         window.location.href = "orders.php";
                     } else {
                         alert("Error: " + data.error);
@@ -152,7 +168,22 @@ ob_start();
                 .catch(error => console.error("Error:", error));
         }
 
+
         function redirectToCustomizePage(index) {
+            const item = cart[index];
+            let customizeData = JSON.parse(localStorage.getItem("customize")) || {};
+            if (customizeData.plant) {
+                if (customizeData.plant !== item.name) {
+                    alert("You can only customize one plant at a time. Please remove the existing plant to select another.");
+                } else {
+                    alert("You are already customizing this plant.");
+                }
+                window.location.href = "customize.php?item=" + index;
+            }
+            customizeData = {
+                plant: item.name,
+            };
+            localStorage.setItem("customize", JSON.stringify(customizeData));
             window.location.href = "customize.php?item=" + index;
         }
 

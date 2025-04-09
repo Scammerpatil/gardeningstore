@@ -33,8 +33,11 @@ $result = $conn->query($query);
                     <?php
                     $services = json_decode($row['services'], true);
                     $rating = getAverageRating($row['gardener_id'], $conn);
+                    $imageSrc = "https://avatar.iran.liara.run/public/" . number_format($row['gardener_id']);
                     ?>
-                    <div class="card shadow-xl bg-base-300">
+                    <div class="card w-80 bg-base-200 shadow-xl">
+                        <figure><img src="<?php echo $imageSrc; ?>" alt="<?= $name; ?>" class="h-48 w-full object-contain" />
+                        </figure>
                         <div class="card-body">
                             <h2 class="card-title text-xl text-primary"><?= htmlspecialchars($row['name']) ?></h2>
                             <p><strong>Email:</strong> <?= htmlspecialchars($row['email']) ?></p>
@@ -42,10 +45,10 @@ $result = $conn->query($query);
                                 <?= !empty($row['phone_no']) ? htmlspecialchars($row['phone_no']) : 'Not Provided' ?></p>
 
                             <div class="mt-2">
-                                <span class="text-yellow-500 text-lg">
+                                <span class="text-error text-lg">
                                     <?= str_repeat('⭐', floor($rating)) ?>
                                 </span>
-                                <span class="text-sm text-gray-600 ml-2">(<?= $rating ?>)</span>
+                                <span class="text-sm text-base-content/60 ml-2">(<?= $rating ?>)</span>
                             </div>
 
                             <div class="mt-4">

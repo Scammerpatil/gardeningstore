@@ -24,7 +24,18 @@ if (empty($data["cart"])) {
     exit();
 }
 
+if (!isset($data["customizing"]) || !isset($data["customizeData"])) {
+    echo json_encode(["error" => "Customization data is missing"]);
+    exit();
+}
+
 $customizing = isset($data["customizing"]) ? trim($data["customizing"]) : "";
+$customizeData = isset($data["customizeData"]) ? $data["customizeData"] : [];
+$customizationDetails = [
+    'instructions' => $customizing,
+    'customizations' => $customizeData,
+];
+$customizingJson = json_encode($customizationDetails);
 
 $conn->begin_transaction();
 
@@ -34,7 +45,7 @@ try {
     }
 
     $insert_order = $conn->prepare("INSERT INTO orders (customer_id, order_date, customizing, total_amount,delivery_status, status) VALUES (?, NOW(), ?, ?,'Pending','Pending')");
-    $insert_order->bind_param("isd", $customer_id, $customizing, $total_amount);
+    $insert_order->bind_param("isd", $customer_id, $customizingJson, $total_amount);
     $insert_order->execute();
     $order_id = $insert_order->insert_id;
 

@@ -80,77 +80,82 @@ $pebbles = $conn->query($pebbles_query)->fetch_all(MYSQLI_ASSOC);
 <script>
     document.addEventListener("DOMContentLoaded", function () {
         const cart = JSON.parse(localStorage.getItem("cart")) || [];
+        const customizeData = JSON.parse(localStorage.getItem("customize")) || {};
+        const itemId = <?= json_encode($item_id) ?>;
+        const product = cart[itemId];
+        document.getElementById("product_name").textContent = product ? product.name : "Unknown Product";
 
-        function updateCartCount() {
-            document.getElementById("cart-count").innerText = cart.length;
-        }
-
-        function saveCart() {
-            localStorage.setItem("cart", JSON.stringify(cart));
-            updateCartCount();
-            alert("Cart updated!");
+        function saveCustomizeData() {
+            localStorage.setItem("customize", JSON.stringify(customizeData));
         }
 
         document.querySelectorAll(".select-pot").forEach(button => {
             button.addEventListener("click", function () {
-                const productId = this.getAttribute("data-id");
-                const productName = this.getAttribute("data-name");
-                const productPrice = this.getAttribute("data-price");
-                const productImage = this.getAttribute("data-image");
-                const productCategory = this.getAttribute("data-category");
+                const potId = this.getAttribute("data-id");
+                const potName = this.getAttribute("data-name");
+                const potPrice = this.getAttribute("data-price");
+                const potImage = this.getAttribute("data-image");
+                const potCategory = this.getAttribute("data-category");
 
-                alert(`${productName} added to cart!`);
-                const existingItem = cart.find(item => item.id === productId);
-
-                if (existingItem) {
-                    existingItem.quantity += 1;
-                } else {
-                    cart.push({
-                        id: productId,
-                        name: productName,
-                        price: parseFloat(productPrice),
-                        image: productImage,
-                        category: productCategory,
-                        quantity: 1
-                    });
+                if (customizeData.pot) {
+                    alert("You can add only one pot at a time. Remove the existing pot to select another.");
+                    return;
                 }
 
-                saveCart();
-                console.log(cart);
+                customizeData.pot = potName
+                cart.push({
+                    id: potId,
+                    name: potName,
+                    price: parseFloat(potPrice),
+                    image: potImage,
+                    category: potCategory,
+                    quantity: 1
+                });
+                localStorage.setItem("cart", JSON.stringify(cart));
+                alert(`${potName} added to your customization!`);
+                saveCustomizeData();
+
+                console.log(customizeData);
             });
         });
 
         document.querySelectorAll(".select-pebble").forEach(button => {
             button.addEventListener("click", function () {
-                const productId = this.getAttribute("data-id");
-                const productName = this.getAttribute("data-name");
-                const productPrice = this.getAttribute("data-price");
-                const productImage = this.getAttribute("data-image");
-                const productCategory = this.getAttribute("data-category");
+                const pebbleId = this.getAttribute("data-id");
+                const pebbleName = this.getAttribute("data-name");
+                const pebblePrice = this.getAttribute("data-price");
+                const pebbleImage = this.getAttribute("data-image");
+                const pebbleCategory = this.getAttribute("data-category");
 
-                alert(`${productName} added to cart!`);
-                const existingItem = cart.find(item => item.id === productId);
-
-                if (existingItem) {
-                    existingItem.quantity += 1;
-                } else {
-                    cart.push({
-                        id: productId,
-                        name: productName,
-                        price: parseFloat(productPrice),
-                        image: productImage,
-                        category: productCategory,
-                        quantity: 1
-                    });
+                if (!customizeData.pebbles) {
+                    customizeData.pebbles = [];
                 }
 
-                saveCart();
-                console.log(cart);
+                if (customizeData.pebbles.includes(pebbleName)) {
+                    alert(`${pebbleName} is already added to your customization.`);
+                    return;
+                }
+
+                customizeData.pebbles.push(pebbleName);
+                cart.push({
+                    id: pebbleId,
+                    name: pebbleName,
+                    price: parseFloat(pebblePrice),
+                    image: pebbleImage,
+                    category: pebbleCategory,
+                    quantity: 1
+                });
+                localStorage.setItem("cart", JSON.stringify(cart));
+
+                alert(`${pebbleName} added to your customization!`);
+                saveCustomizeData();
+
+                console.log(customizeData);
             });
         });
 
-        updateCartCount();
     });
+
 </script>
 
 <?php
