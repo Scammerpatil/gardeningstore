@@ -39,6 +39,7 @@ ob_start();
         <tbody>
             <?php while ($row = $result->fetch_assoc()): ?>
                 <tr>
+                    <input type="hidden" id="modalHireId" name="hire_id">
                     <td><?= htmlspecialchars($row['gardener_name']); ?></td>
                     <td><?= htmlspecialchars($row['task']); ?></td>
                     <td><?= $row['hire_date_from']; ?></td>
@@ -86,6 +87,7 @@ ob_start();
 
 <script>
     function openRatingModal(hireId, gardenerId) {
+        console.log(hireId, gardenerId);
         document.getElementById("modalHireId").value = hireId;
         document.getElementById("modalGardenerId").value = gardenerId;
         document.getElementById("ratingModal").checked = true;

@@ -5,7 +5,7 @@ $userType = isset($_GET['user']) ? htmlspecialchars($_GET['user']) : 'customer';
 <html lang="en" data-theme="lemonade">
 <?php include "./components/general/Header.php" ?>
 
-<body style="font-family: Dosis, sans-serif;">
+<body style="font-family: Dosis, sans-serif;background-image:url('img/bg-img/nature.jpg'); background-size: 100%; background-position: center -50px; background-attachment: fixed;">
     <?php include "./components/general/Navbar.php" ?>
     <?php include './components/general/Hero.php' ?>
     <div class="hero min-h-screen relative z-10 overflow-hidden" style="">

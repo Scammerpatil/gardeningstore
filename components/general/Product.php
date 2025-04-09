@@ -19,7 +19,8 @@ $result = $conn->query($query);
                 'Bulb' => 'bulb',
                 'Soil & Fertilizer' => 'soil-fertilizer',
                 'Pebbles' => 'pebbles',
-                'Accessories' => 'accessories'
+                'Accessories' => 'accessories',
+                'Pots'=>'pots'
             ];
             ?>
             <button class="tab text-lg hover:text-primary filter-btn" data-filter="*">All</button>
@@ -86,7 +87,9 @@ $result = $conn->query($query);
             "pebbles": ["Decorative Pebbles", "Natural Stones", "River Rocks",
                 "Colored Pebbles", "Aquarium Pebbles", "Garden Path Pebbles", "Gravel"],
             "accessories": ["Plant Stands", "Garden Lighting", "Labels & Markers",
-                "Sprayers & Misters", "Hanging Hooks", "Trellises & Supports", "Garden Storage"]
+                "Sprayers & Misters", "Hanging Hooks", "Trellises & Supports", "Garden Storage"],
+            "pots":["Terracotta Pots", "Plastic Pots", "Ceramic Pots",
+                "Hanging Pots", "Self-Watering Pots", "Decorative Pots", "Planters"]    
         };
 
         // Filter function
